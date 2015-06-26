@@ -1,0 +1,91 @@
+html {
+	box-sizing: border-box;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+body {
+	position: relative;
+}
+
+.scoreboard {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 500px;
+	width: 200px;
+	border: 2px solid black;
+}
+
+.board {
+	position: relative;	
+	width: 550px;
+	height: 550px;
+
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.game-area {
+	position: absolute;
+	top: 50px;
+	left: 50px;
+
+	width: 500px;
+	height: 500px;
+}
+
+.game-area > .tile {
+	float: left;
+	border: 1px solid black;
+}
+
+.tile {
+	/*border: 1px solid black;*/
+	width: 50px;
+	height: 50px;
+
+	text-align: center;
+	font-size: 2em;
+
+}
+
+.row-label {
+	position: absolute;
+	top: 50px;
+	left: 0px;
+	height: 500px;
+	width: 50px;
+	overflow: hidden;
+}
+
+.column-label {
+	position: absolute;
+	top: 0px;
+	left: 50px;
+	height: 50px;
+	width: 500px;
+	overflow: hidden;
+}
+
+.column-label > .tile {
+	float: left;
+}
+
+.clear {
+	clear: both;
+}
+
+.ship {
+	background-color: gray;
+}
+
+.hit {
+	background-color: red;
+}
+
+.miss {
+	background-color: blue;
+}
