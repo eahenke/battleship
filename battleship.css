@@ -19,13 +19,28 @@ body {
 	border: 2px solid black;
 }
 
+.board-wrap {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.board-wrap > p:first-child {
+	float: left;
+}
+
+.board-wrap > p:nth-child(2) {
+	float: right;
+}
+
 .board {
 	position: relative;	
 	width: 550px;
 	height: 550px;
 
-	margin-left: auto;
-	margin-right: auto;
+	float: left;
+
+	/*margin-left: auto;*/
+	/*margin-right: auto;*/
 }
 
 .game-area {
@@ -80,6 +95,14 @@ body {
 
 .ship {
 	background-color: gray;
+}
+
+.ai-board .ship {
+	background-color: white;
+}
+
+.ai-board .ship.hit{
+	background-color: red;
 }
 
 .hit {

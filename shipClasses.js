@@ -393,17 +393,28 @@
 
 	//GAME CLASS
 	function Game() {
-		this.maxTurns = 20;
-		this.turns = this.maxTurns;
+		//this.maxTurns = 20;
+		this.turns = 0;
+		this.over = false;
+		this.whoseTurn = 'p1';
+		this.p1;
+		this.p2;
 		
 		this.newGame = function() {
-			var fleet = new Fleet();
-			var board = new Board();
+			this.p1 = new Human();
+			this.p2 = new AI();
 
-			board.addShips(fleet);
-			this.updateScoreBoard(fleet);
-			this.addClicks(board, fleet);
+			this.assignEnemy(this.p1, this.p2);
+		}
 
+		this.turnControl = function() {
+			if(this.whoseTurn == 'p1') {
+				this.p1.guess();
+				this.whoseTurn = 'p2';
+			} else {
+				this.p2.guess();
+				this.whoseTurn = 'p1';
+			}
 		}
 
 		this.assignEnemy = function(p1, p2) {
@@ -475,6 +486,8 @@
 		this.playerType = playerType;
 		this.enemy;
 
+		this.turn = false;
+
 		this.board = new Board(this.playerType);
 		this.fleet = new Fleet();
 
@@ -486,6 +499,12 @@
 		constructor: Player
 	}
 
+	Player.prototype.objectify = function(tile) {
+		return $(this.enemy.board.selector + ' .tile[data-coord="' + tile + '"]');
+	}
+
+
+
 	//Human Subclass
 	function Human() {
 		Player.call(this, 'human');
@@ -493,6 +512,75 @@
 	window.Human = Human;
 	Human.prototype = Object.create(Player.prototype);
 	Human.prototype.constructor = Human;
+
+	Human.prototype.getTile = function() {
+		var self = this;
+		var tiles = this.enemy.board.guessableSpaces;
+
+		for(var i = 0; i < tiles.length; i++) {
+			
+			self.objectify(tiles[i]).click(function() {
+				
+				var tile = ($(this).attr('data-coord'));
+				return tile;
+			});
+		}
+	}
+
+	Human.prototype.checkGuess = function(tile) {
+		var tileObj = this.objectify(tile);
+		if(!tileObj.hasClass('hit') && !tileObj.hasClass('miss')) {
+			//alert('guessing');
+			var board = this.enemy.board;
+			
+			if(board.checkHit(tileObj)) {
+				tileObj.addClass('hit');
+				var ship = board.determineShip(tile, this.enemy.fleet);
+				ship.hit();
+				//alert(ship.shipType);
+			} else {
+				board.miss(tileObj);
+				this.turn = false;
+				
+
+			}
+			board.removeSpace('guessable', tile);
+
+			//AI's turn
+			this.enemy.guess();
+			
+		}
+
+	}
+
+	Human.prototype.guess = function() {
+	
+		/*
+		this.turn = true;
+		var self = this;
+		var tiles = this.enemy.board.guessableSpaces;
+
+		for(var i = 0; i < tiles.length; i++) {
+			
+			self.objectify(tiles[i]).click(function() {
+				
+				var tile = ($(this).attr('data-coord'));
+				self.checkGuess(tile);
+			});
+		}
+		*/
+		var tile = this.getTile();
+		if(tile) {
+			this.checkGuess(tile);
+			
+		}
+	}
+
+
+
+
+
+
 
 	//AI Subclass
 	function AI() {
@@ -558,7 +646,7 @@
 	AI.prototype.checkTarget = function(tile, ship) {
 		//accidental hit
 		if(this.guessInfo['targetShip'] && ship != this.guessInfo['targetShip'] ) {
-			alert('diff ship');
+			//alert('diff ship');
 			this.guessInfo['knownShips'].push(tile);
 			console.log('known ships added: ');
 			console.log(this.guessInfo['knownShips']);
@@ -604,7 +692,7 @@
 
 		//find a new target
 		if(this.guessInfo['knownShips'].length) {
-			alert('searching known ships');
+			//alert('searching known ships');
 
 			var targetTile = this.guessInfo['knownShips'][0];
 			var ship = board.determineShip(targetTile, this.enemy.fleet);
@@ -626,8 +714,8 @@
 		for(var i = 0; i < ship.positions.length; i++) {
 			var shipTile = ship.positions[i];
 			if(this.guessInfo['knownShips'].indexOf(shipTile) > -1) {
-				alert('removing from knownShips');
-				alert(shipTile);
+				//alert('removing from knownShips');
+				//alert(shipTile);
 				console.log('REMOVING FROM KNOWN SHIPS: ' + shipTile);
 				var index = this.guessInfo['knownShips'].indexOf(shipTile);
 				this.guessInfo['knownShips'].splice(index, 1);
@@ -670,9 +758,11 @@
 
 	}
 
+	/*
 	AI.prototype.objectify = function(tile) {
 		return $(this.enemy.board.selector + ' .tile[data-coord="' + tile + '"]');
 	}
+	*/
 
 	AI.prototype.randomGuess = function() {
 		var tile = getRandom(this.enemy.board.guessableSpaces);
@@ -722,17 +812,36 @@
 
 
 	var game = new Game();
-	//game.newGame();
+	game.newGame();
 
-	var ai = new AI();
-	var player = new Human();
-	game.assignEnemy(player, ai);
 
+	//TURN COUNTING AND ALTERNATING DO NOT WORK RIGHT. 
+
+	for(var i = 0; i < 5; i++) {
+		game.p1.guess();
+		game.turns++;
+		$('.turns').text(game.turns);
+	}
+		
 	
 
+	
+	/*
+	var ai = new AI();
+	var human = new Human();
+	game.assignEnemy(human, ai);
+	
+	for(var i = 0; i < 5; i++) {
+		human.guess();
+		ai.guess();
+	}
+	*/
+	
+	/*
 	for(var i = 0; i < 35; i++) {
 		ai.guess();
 		console.log(ai.guessInfo);	
-	}	
+	}
+	*/	
 
 })(window);

@@ -20,8 +20,9 @@
 		<div class="new">New Game</div>
 
 		<div class="board-wrap">
-			<p>Player Board</p>
 			<div class="board human-board">
+			<!-- <p>Player Board</p>
+			<p>AI Board</p> -->
 				
 				<?php
 				$rows = range('A', 'J');
@@ -61,7 +62,6 @@
 				</div>
 			</div>
 
-			<p>AI Board</p>
 			<div class="board ai-board">
 				
 				<?php
