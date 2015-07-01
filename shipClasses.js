@@ -181,10 +181,12 @@
 
 	Fleet.prototype.checkFleet = function() {
 		if(this.activeShips.length === 0) {
-			console.log("Game over, you win!");
-			$('.game-area .tile').off();
+			//console.log("Game over, you win!");
+			//$('.game-area .tile').off();
+			return false;
 		} else {
-			console.log(this.activeShips);			
+			//console.log(this.activeShips);			
+			return true;
 		}
 	}
 
@@ -391,94 +393,6 @@
 	}
 	*/
 
-	//GAME CLASS
-	function Game() {
-		//this.maxTurns = 20;
-		this.turns = 0;
-		this.over = false;
-		this.whoseTurn = 'p1';
-		this.p1;
-		this.p2;
-		
-		this.newGame = function() {
-			this.p1 = new Human();
-			this.p2 = new AI();
-
-			this.assignEnemy(this.p1, this.p2);
-		}
-
-		this.turnControl = function() {
-			if(this.whoseTurn == 'p1') {
-				this.p1.guess();
-				this.whoseTurn = 'p2';
-			} else {
-				this.p2.guess();
-				this.whoseTurn = 'p1';
-			}
-		}
-
-		this.assignEnemy = function(p1, p2) {
-			p1.enemy = p2;
-			p2.enemy = p1;
-		}
-
-		this.updateScoreBoard = function(fleet) {
-			$('.turns').text(this.turns);
-			var shipsLeft = '';
-			for(var i = 0; i < fleet.totalShips.length; i++) {
-				var ship = fleet.totalShips[i];
-				shipsLeft += '<p>' + ship.shipType + ': ' + ship.hitPoints + '</p>';
-				//console.log(ship);
-				
-			}
-			$('.ships-left').empty().append(shipsLeft);
-
-		}
-
-		this.addClicks = function(board, fleet) {
-			$('.game-area > .tile').click(function(){
-			game.guess($(this), board, fleet);
-			});
-		}	
-
-		this.guess = function(tile, board, fleet) {
-			var tile = $(tile);
-			if( !tile.hasClass('miss') && !tile.hasClass('hit') ) {
-				if(this.checkHit(tile)) { //hit
-					tile.addClass('hit');
-					var ship = board.determineShip(tile, fleet);
-					ship.hit();
-					fleet.checkSink(ship);
-					fleet.checkFleet();
-				} else { //miss
-					tile.addClass('miss');
-					this.turns--;
-					console.log(this.turns);
-					this.checkTurns();
-				}
-				game.updateScoreBoard(fleet);				
-			}
-
-		}
-
-		this.hit = function(ship) {
-			ship.hit();
-		}
-
-		this.checkTurns = function() {
-			if(this.turns == 0) {
-				console.log('Game over');
-				$('.game-area .tile').off();
-				$('.ship').css('background-color', 'red');
-			}
-		}	
-	}
-
-	window.Game = Game;
-
-	Game.prototype = {
-		constructor: Game
-	};
 
 
 	//PLAYER CLASS
@@ -513,42 +427,61 @@
 	Human.prototype = Object.create(Player.prototype);
 	Human.prototype.constructor = Human;
 
-	Human.prototype.getTile = function() {
-		var self = this;
-		var tiles = this.enemy.board.guessableSpaces;
 
+	Human.prototype.getTile = function(tile, defObj) {
+		//alert('get tile himan');
+		//var defObj = $.Deferred();
+		//alert(defObj.state());
+		
+		var tile = $(tile).attr('data-coord');
+
+		defObj.resolve(tile);
+
+		return defObj;
+
+
+
+		//var self = this;
+		//var tiles = this.enemy.board.guessableSpaces;
+
+		/*
 		for(var i = 0; i < tiles.length; i++) {
 			
 			self.objectify(tiles[i]).click(function() {
 				
 				var tile = ($(this).attr('data-coord'));
-				return tile;
+				defObj.resolve(tile);
+
+
+				return defObj;
 			});
 		}
+		*/
 	}
 
 	Human.prototype.checkGuess = function(tile) {
-		var tileObj = this.objectify(tile);
+		console.log(this);
+		//alert(tile);
+		var self = this;
+		var tileObj = self.objectify(tile);
+
+		
 		if(!tileObj.hasClass('hit') && !tileObj.hasClass('miss')) {
-			//alert('guessing');
+			
 			var board = this.enemy.board;
 			
 			if(board.checkHit(tileObj)) {
 				tileObj.addClass('hit');
 				var ship = board.determineShip(tile, this.enemy.fleet);
 				ship.hit();
-				//alert(ship.shipType);
+				this.enemy.fleet.checkSink(ship);
+				
 			} else {
 				board.miss(tileObj);
-				this.turn = false;
-				
-
 			}
-			board.removeSpace('guessable', tile);
-
-			//AI's turn
-			this.enemy.guess();
 			
+			console.log(tile);
+			board.removeSpace('guessable', tile);			
 		}
 
 	}
@@ -629,6 +562,7 @@
 			var ship = board.determineShip(tile, this.enemy.fleet);
 			ship.hit();
 			this.checkTarget(tile, ship);
+			//this.enemy.fleet.checkFleet();
 
 		} else { //miss
 			board.miss(tileObj);			
@@ -811,18 +745,223 @@
 	}
 
 
+	//GAME CLASS
+	function Game() {
+		//this.maxTurns = 20;
+		this.turns = 0;
+		this.over = false;		
+		this.p1;
+		this.p2;
+
+		this.winner;
+		this.loser;
+		
+		this.newGame = function() {
+			this.p1 = new Human();
+			this.p2 = new AI();
+
+			this.assignEnemy(this.p1, this.p2);
+
+			console.log(this.p1);
+			console.log(this.p2);
+		}
+
+		this.turnControl = function() {
+			if(this.whoseTurn == 'p1') {
+				this.p1.guess();
+				this.whoseTurn = 'p2';
+			} else {
+				this.p2.guess();
+				this.whoseTurn = 'p1';
+			}
+		}
+
+		this.assignEnemy = function(p1, p2) {
+			p1.enemy = p2;
+			p2.enemy = p1;
+		}
+
+		this.updateScoreBoard = function(fleet) {
+			$('.turns').text(this.turns);
+			var shipsLeft = '';
+			for(var i = 0; i < fleet.totalShips.length; i++) {
+				var ship = fleet.totalShips[i];
+				shipsLeft += '<p>' + ship.shipType + ': ' + ship.hitPoints + '</p>';
+				//console.log(ship);
+				
+			}
+			$('.ships-left').empty().append(shipsLeft);
+
+		}
+
+		this.addClicks = function(board, fleet) {
+			$('.game-area > .tile').click(function(){
+			game.guess($(this), board, fleet);
+			});
+		}	
+
+		this.guess = function(tile, board, fleet) {
+			var tile = $(tile);
+			if( !tile.hasClass('miss') && !tile.hasClass('hit') ) {
+				if(this.checkHit(tile)) { //hit
+					tile.addClass('hit');
+					var ship = board.determineShip(tile, fleet);
+					ship.hit();
+					fleet.checkSink(ship);
+					fleet.checkFleet();
+				} else { //miss
+					tile.addClass('miss');
+					this.turns--;
+					console.log(this.turns);
+					this.checkTurns();
+				}
+				game.updateScoreBoard(fleet);				
+			}
+
+		}
+
+		this.hit = function(ship) {
+			ship.hit();
+		}
+
+		
+		//DELETE
+		/*
+		this.checkTurns = function() {
+			if(this.turns == 0) {
+				console.log('Game over');
+				$('.game-area .tile').off();
+				$('.ship').css('background-color', 'red');
+			}
+		}
+		*/	
+		
+		//DELETE
+		this.assignHumanTiles = function() {
+				//var defObj = $.Deferred();
+			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
+				var coord = this.p1.board.guessableSpaces[i];
+				var tileObj = this.p1.objectify(coord);
+				tileObj.click(this.p1.getTile);
+			}
+		}
+
+
+
+		this.checkGameStatus = function() {
+			if(!this.p1.fleet.checkFleet() || !this.p2.fleet.checkFleet() ) {
+				
+				if(!this.p1.fleet.checkFleet()) {
+					this.winner = 'Player 2';
+					this.loser = 'Player 1';
+				} else {
+					this.winner = 'Player 1';
+					this.loser = 'Player 2';
+				}
+
+				return true;
+
+			}
+		}
+
+		this.endGame = function() {
+			var endMsg = '<p>' + this.loser + ' has lost all ships! ' + this.winner + ' wins!</p>';
+			$('.board-wrap').empty();
+			$('.board-wrap').html(endMsg);
+		}
+
+
+
+		//AI CAN ONLY WIN ON THE TURN AFTER IT REALLY WINS.  FIGURE OUT.
+		this.gameLoop = function() {
+			
+
+			var self = this;
+			var humanTile;
+			console.log(self.turns);
+
+			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
+				var coord = this.p1.board.guessableSpaces[i];
+				var tileObj = this.p1.objectify(coord);
+				tileObj.click(function() {
+					
+					
+					var defObj = new $.Deferred();
+					
+
+					//turn off tile after click
+					$(this).off();
+
+					console.log(self.p1);
+					console.log(defObj.state());
+					humanTile = self.p1.getTile(this, defObj);
+				
+					humanTile.done(function(tile) {
+						
+						self.p1.checkGuess(tile);
+						
+
+						if(self.checkGameStatus()) {
+							setTimeout(function(){
+								self.endGame();
+							}, 2500);
+						}
+
+						setTimeout(function() {
+							self.p2.guess();
+						}, 1200);
+
+						self.turns++;
+						console.log(self.turns);
+						
+						if(self.checkGameStatus()) {
+							setTimeout(function(){
+								self.endGame();
+							}, 2500);
+						}
+					});
+
+				
+					//update game info/turns
+					humanTile.done(function() {
+
+					});
+
+				});
+
+			}
+		}
+	}
+
+	window.Game = Game;
+
+	Game.prototype = {
+		constructor: Game
+	};
+
+
+
+
+
 	var game = new Game();
 	game.newGame();
+	
+	//for(var i = 0; i < 5; i++) {
+		game.gameLoop();	
+		
+	//}
+
 
 
 	//TURN COUNTING AND ALTERNATING DO NOT WORK RIGHT. 
 
+/*
 	for(var i = 0; i < 5; i++) {
 		game.p1.guess();
 		game.turns++;
 		$('.turns').text(game.turns);
 	}
-		
+*/		
 	
 
 	
