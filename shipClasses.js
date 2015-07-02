@@ -400,7 +400,7 @@
 		this.playerType = playerType;
 		this.enemy;
 
-		this.turn = false;
+		this.turn = true;
 
 		this.board = new Board(this.playerType);
 		this.fleet = new Fleet();
@@ -428,42 +428,18 @@
 	Human.prototype.constructor = Human;
 
 
-	Human.prototype.getTile = function(tile, defObj) {
-		//alert('get tile himan');
-		//var defObj = $.Deferred();
-		//alert(defObj.state());
-		
-		var tile = $(tile).attr('data-coord');
+	
 
-		defObj.resolve(tile);
-
-		return defObj;
-
-
-
-		//var self = this;
-		//var tiles = this.enemy.board.guessableSpaces;
-
-		/*
-		for(var i = 0; i < tiles.length; i++) {
-			
-			self.objectify(tiles[i]).click(function() {
-				
-				var tile = ($(this).attr('data-coord'));
-				defObj.resolve(tile);
-
-
-				return defObj;
-			});
-		}
-		*/
-	}
-
-	Human.prototype.checkGuess = function(tile) {
+	Human.prototype.checkGuess = function(tileObj) {
 		console.log(this);
 		//alert(tile);
+		var dfd = $.Deferred();
+
 		var self = this;
-		var tileObj = self.objectify(tile);
+
+		//var tileObj = self.objectify(tile);
+
+		var tile = tileObj.attr('data-coord');
 
 		
 		if(!tileObj.hasClass('hit') && !tileObj.hasClass('miss')) {
@@ -481,7 +457,12 @@
 			}
 			
 			console.log(tile);
-			board.removeSpace('guessable', tile);			
+			board.removeSpace('guessable', tile);
+
+			//ADDED
+			dfd.resolve();
+			//alert(dfd.state());
+			return dfd.promise();
 		}
 
 	}
@@ -568,6 +549,7 @@
 			board.miss(tileObj);			
 		}		
 		this.guessInfo['lastTileGuessed'] = tile;
+		this.enemy.turn = true;
 	}
 
 	AI.prototype.boardUpdate = function(tile, tileObj) {
@@ -836,21 +818,11 @@
 		}
 		*/	
 		
-		//DELETE
-		this.assignHumanTiles = function() {
-				//var defObj = $.Deferred();
-			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
-				var coord = this.p1.board.guessableSpaces[i];
-				var tileObj = this.p1.objectify(coord);
-				tileObj.click(this.p1.getTile);
-			}
-		}
-
-
-
-		this.checkGameStatus = function() {
+		this.isGameOver = function() {
 			if(!this.p1.fleet.checkFleet() || !this.p2.fleet.checkFleet() ) {
-				
+				this.over = true;
+				alert('game status');
+
 				if(!this.p1.fleet.checkFleet()) {
 					this.winner = 'Player 2';
 					this.loser = 'Player 1';
@@ -872,65 +844,176 @@
 
 
 
+		this.humanTurn = function(tile, self) {
+			//$('.tile').off();
+
+			var dfd = new $.Deferred();
+			self.p1.checkGuess(tile);
+			self.isGameOver();
+			dfd.resolve();
+
+			return dfd.promise();
+
+		}
+
+
 		//AI CAN ONLY WIN ON THE TURN AFTER IT REALLY WINS.  FIGURE OUT.
 		this.gameLoop = function() {
 			
-
+			/*
+			var turn = new $.Deferred();
 			var self = this;
-			var humanTile;
+			
+			var promise = self.assignClickEvents();
+			
+			promise.done(function() {
+				
+				
+				self.isGameOver();
+				self.p2.guess();
+				self.isGameOver();
+			});
+		*/
+			
+
+
+
+
+
+
+			/*
+			//Human turn
+			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
+				var coord = this.p1.board.guessableSpaces[i];
+				var tileObj = this.p1.objectify(coord);
+				tileObj.click(function() {
+					$('.tile').off();
+					self.p1.checkGuess($(this)).then(function() {
+						self.isGameOver();
+						alert('wait until click');
+					});
+					humanTurn.resolve();
+				});
+			};
+
+			//AI turn
+			humanTurn.done(function() {
+				self.p2.guess();
+				self.isGameOver;
+				turn.resolve();
+			})
+
+			return turn;
+			
+			*/
+
+
+
+
+			//assignClickEvents.then(self.p1.getTile).then(self.p1.checkGuess).then(self.isGameOver);
+			
+
+
+		//THIS STILL WORKS
+
+			//may have to abandon the dream of having the game logic outside the click event.
+		  
+			var self = this;
+			var clicked = new $.Deferred();
+			var humanTurn;
 			console.log(self.turns);
 
 			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
 				var coord = this.p1.board.guessableSpaces[i];
 				var tileObj = this.p1.objectify(coord);
 				tileObj.click(function() {
+		  			//var clicked = new $.Deferred();
 					
-					
-					var defObj = new $.Deferred();
-					
-
-					//turn off tile after click
-					$(this).off();
-
-					console.log(self.p1);
-					console.log(defObj.state());
-					humanTile = self.p1.getTile(this, defObj);
-				
-					humanTile.done(function(tile) {
+					if(self.p1.turn) {
+						self.p1.turn = false;
 						
-						self.p1.checkGuess(tile);
+						//Turn off clicked tiles
+						//$(this).off();
 						
+						var tile = $(this);
+						alert(tile);
+						//console.log(tile.attr('data-coord'));
+						console.log(this);
+						tile.off();
+						clicked.resolve(tile);
+					} //added
 
-						if(self.checkGameStatus()) {
-							setTimeout(function(){
-								self.endGame();
-							}, 2500);
-						}
+				}); //added
 
-						setTimeout(function() {
-							self.p2.guess();
-						}, 1200);
+			} //end for
+				clicked.done(function(tile) {
 
-						self.turns++;
-						console.log(self.turns);
-						
-						if(self.checkGameStatus()) {
-							setTimeout(function(){
-								self.endGame();
-							}, 2500);
-						}
-					});
 
-				
-					//update game info/turns
-					humanTile.done(function() {
 
-					});
+
+						humanTurn = self.p1.checkGuess(tile); //was $this
+						console.log(humanTurn);
+
+						humanTurn.done(function() {
+							
+
+							if(self.isGameOver()) {
+								setTimeout(function(){
+									self.endGame();
+								}, 1000);
+							}
+
+							//AI Guess (after pause) and check game
+							setTimeout(function() {
+								self.p2.guess();
+								if(self.isGameOver()) {
+									setTimeout(function(){
+										self.endGame();
+									}, 2500);
+								}
+							}, 1200);
+
+							
+							self.turns++;
+							console.log(self.turns);
+						});
+					//}
 
 				});
 
-			}
+
+		
 		}
+
+		//delete
+		this.assignClickEvents = function() {
+			var dfd = new $.Deferred();
+			var clicked = new $.Deferred();
+			//alert('assigning');
+			var self = this;
+			var promise;
+			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
+				var coord = this.p1.board.guessableSpaces[i];
+				var tileObj = this.p1.objectify(coord);
+				tileObj.click(function() {
+					if(self.p1.turn) {
+
+						self.p1.turn == false;
+						promise = self.humanTurn($(this), self);
+					
+						//console.log(promise.state());
+						clicked.resolve();
+					}
+				});
+			}
+
+			clicked.done(function() {
+				dfd.resolve();
+			});
+
+			return dfd.promise();
+		}
+
 	}
 
 	window.Game = Game;
@@ -946,10 +1029,9 @@
 	var game = new Game();
 	game.newGame();
 	
-	//for(var i = 0; i < 5; i++) {
-		game.gameLoop();	
-		
-	//}
+	
+	
+		game.gameLoop();
 
 
 
