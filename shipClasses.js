@@ -821,7 +821,7 @@
 		this.isGameOver = function() {
 			if(!this.p1.fleet.checkFleet() || !this.p2.fleet.checkFleet() ) {
 				this.over = true;
-				alert('game status');
+				//alert('game status');
 
 				if(!this.p1.fleet.checkFleet()) {
 					this.winner = 'Player 2';
@@ -844,17 +844,7 @@
 
 
 
-		this.humanTurn = function(tile, self) {
-			//$('.tile').off();
 
-			var dfd = new $.Deferred();
-			self.p1.checkGuess(tile);
-			self.isGameOver();
-			dfd.resolve();
-
-			return dfd.promise();
-
-		}
 
 
 		//AI CAN ONLY WIN ON THE TURN AFTER IT REALLY WINS.  FIGURE OUT.
@@ -911,12 +901,17 @@
 
 
 			//assignClickEvents.then(self.p1.getTile).then(self.p1.checkGuess).then(self.isGameOver);
-			
+		
+
+
+
+
 
 
 		//THIS STILL WORKS
 
-			//may have to abandon the dream of having the game logic outside the click event.
+			//DOUBLE CLICKING GIVES THE AI TWO TURNS, BUT YOU ONLY ONE.
+			//MAY NEED TO FOLD THE .DONE()INTO TURN CHECK IF STATEMENT
 		  
 			var self = this;
 			var clicked = new $.Deferred();
@@ -932,56 +927,47 @@
 					if(self.p1.turn) {
 						self.p1.turn = false;
 						
-						//Turn off clicked tiles
-						//$(this).off();
-						
 						var tile = $(this);
-						alert(tile);
+						//alert(tile);
 						//console.log(tile.attr('data-coord'));
 						console.log(this);
 						tile.off();
-						clicked.resolve(tile);
-					} //added
-
-				}); //added
-
-			} //end for
-				clicked.done(function(tile) {
-
-
-
 
 						humanTurn = self.p1.checkGuess(tile); //was $this
 						console.log(humanTurn);
+				
 
-						humanTurn.done(function() {
-							
+					}
+			
 
+					humanTurn.done(function() {
+						
+
+						if(self.isGameOver()) {
+							setTimeout(function(){
+								self.endGame();
+							}, 1000);
+						}
+
+						//AI Guess (after pause) and check game
+						setTimeout(function() {
+							self.p2.guess();
 							if(self.isGameOver()) {
 								setTimeout(function(){
 									self.endGame();
-								}, 1000);
+								}, 2500);
 							}
+						}, 1200);
 
-							//AI Guess (after pause) and check game
-							setTimeout(function() {
-								self.p2.guess();
-								if(self.isGameOver()) {
-									setTimeout(function(){
-										self.endGame();
-									}, 2500);
-								}
-							}, 1200);
-
-							
-							self.turns++;
-							console.log(self.turns);
-						});
-					//}
+						
+						self.turns++;
+						console.log(self.turns);
+					});
+				
 
 				});
-
-
+		
+			}
 		
 		}
 
@@ -1015,7 +1001,6 @@
 		}
 
 	}
-
 	window.Game = Game;
 
 	Game.prototype = {
