@@ -1,114 +1,128 @@
+/* line 1, ../sass/battleship.scss */
 html {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
+/* line 5, ../sass/battleship.scss */
 *, *:before, *:after {
-	box-sizing: inherit;
+  box-sizing: inherit;
 }
 
+/* line 9, ../sass/battleship.scss */
 body {
-	position: relative;
+  position: relative;
 }
 
-.scoreboard {
-	position: absolute;
-	top: 0;
-	right: 0;
-	height: 500px;
-	width: 200px;
-	border: 2px solid black;
-}
-
+/* line 1, ../sass/objects/board/_size.scss */
 .board-wrap {
-	margin-left: auto;
-	margin-right: auto;
+  margin-left: 80px;
+  width: 960px;
+  height: auto;
+  overflow: hidden;
 }
 
-.board-wrap > p:first-child {
-	float: left;
+/* line 9, ../sass/objects/board/_size.scss */
+.board:first-child {
+  float: left;
 }
 
-.board-wrap > p:nth-child(2) {
-	float: right;
+/* line 13, ../sass/objects/board/_size.scss */
+.board:nth-child(2) {
+  float: right;
 }
 
+/* line 17, ../sass/objects/board/_size.scss */
 .board {
-	position: relative;	
-	width: 550px;
-	height: 550px;
-
-	float: left;
-
-	/*margin-left: auto;*/
-	/*margin-right: auto;*/
+  position: relative;
+  width: 440px;
+  height: 440px;
 }
 
+/* line 25, ../sass/objects/board/_size.scss */
 .game-area {
-	position: absolute;
-	top: 50px;
-	left: 50px;
-
-	width: 500px;
-	height: 500px;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 400px;
+  height: 400px;
 }
 
+/* line 34, ../sass/objects/board/_size.scss */
 .game-area > .tile {
-	float: left;
-	border: 1px solid black;
+  float: left;
+  border: 1px solid black;
 }
 
+/* line 39, ../sass/objects/board/_size.scss */
 .tile {
-	/*border: 1px solid black;*/
-	width: 50px;
-	height: 50px;
-
-	text-align: center;
-	font-size: 2em;
-
+  /*border: 1px solid black;*/
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 2em;
 }
 
+/* line 49, ../sass/objects/board/_size.scss */
 .row-label {
-	position: absolute;
-	top: 50px;
-	left: 0px;
-	height: 500px;
-	width: 50px;
-	overflow: hidden;
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  height: 400px;
+  width: 40px;
+  overflow: hidden;
 }
 
+/* line 58, ../sass/objects/board/_size.scss */
 .column-label {
-	position: absolute;
-	top: 0px;
-	left: 50px;
-	height: 50px;
-	width: 500px;
-	overflow: hidden;
+  position: absolute;
+  top: 0px;
+  left: 40px;
+  height: 40px;
+  width: 400px;
+  overflow: hidden;
 }
 
+/* line 67, ../sass/objects/board/_size.scss */
 .column-label > .tile {
-	float: left;
+  float: left;
 }
 
+/* line 71, ../sass/objects/board/_size.scss */
 .clear {
-	clear: both;
+  clear: both;
 }
 
+/* line 1, ../sass/objects/board/_color.scss */
 .ship {
-	background-color: gray;
+  background-color: gray;
 }
 
+/* line 5, ../sass/objects/board/_color.scss */
 .ai-board .ship {
-	background-color: white;
+  background-color: white;
 }
 
-.ai-board .ship.hit{
-	background-color: red;
+/* line 9, ../sass/objects/board/_color.scss */
+.ai-board .ship.hit {
+  background-color: red;
 }
 
+/* line 13, ../sass/objects/board/_color.scss */
 .hit {
-	background-color: red;
+  background-color: red;
 }
 
+/* line 17, ../sass/objects/board/_color.scss */
 .miss {
-	background-color: blue;
+  background-color: blue;
+}
+
+/* line 1, ../sass/objects/scoreboard/_scoreboard.scss */
+.scoreboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 500px;
+  width: 200px;
+  border: 2px solid black;
 }
