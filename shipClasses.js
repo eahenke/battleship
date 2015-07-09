@@ -433,7 +433,7 @@
 	Human.prototype.checkGuess = function(tileObj) {
 		console.log(this);
 		//alert(tile);
-		var dfd = $.Deferred();
+		var dfd = new $.Deferred();
 
 		var self = this;
 
@@ -776,47 +776,12 @@
 
 		}
 
-		this.addClicks = function(board, fleet) {
-			$('.game-area > .tile').click(function(){
-			game.guess($(this), board, fleet);
-			});
-		}	
-
-		this.guess = function(tile, board, fleet) {
-			var tile = $(tile);
-			if( !tile.hasClass('miss') && !tile.hasClass('hit') ) {
-				if(this.checkHit(tile)) { //hit
-					tile.addClass('hit');
-					var ship = board.determineShip(tile, fleet);
-					ship.hit();
-					fleet.checkSink(ship);
-					fleet.checkFleet();
-				} else { //miss
-					tile.addClass('miss');
-					this.turns--;
-					console.log(this.turns);
-					this.checkTurns();
-				}
-				game.updateScoreBoard(fleet);				
-			}
-
-		}
+		
 
 		this.hit = function(ship) {
 			ship.hit();
 		}
 
-		
-		//DELETE
-		/*
-		this.checkTurns = function() {
-			if(this.turns == 0) {
-				console.log('Game over');
-				$('.game-area .tile').off();
-				$('.ship').css('background-color', 'red');
-			}
-		}
-		*/	
 		
 		this.isGameOver = function() {
 			if(!this.p1.fleet.checkFleet() || !this.p2.fleet.checkFleet() ) {
@@ -844,104 +809,34 @@
 
 
 
-
-
-
-		//AI CAN ONLY WIN ON THE TURN AFTER IT REALLY WINS.  FIGURE OUT.
+		//WORKING
 		this.gameLoop = function() {
-			
-			/*
-			var turn = new $.Deferred();
+					  
 			var self = this;
-			
-			var promise = self.assignClickEvents();
-			
-			promise.done(function() {
-				
-				
-				self.isGameOver();
-				self.p2.guess();
-				self.isGameOver();
-			});
-		*/
-			
-
-
-
-
-
-
-			/*
-			//Human turn
-			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
-				var coord = this.p1.board.guessableSpaces[i];
-				var tileObj = this.p1.objectify(coord);
-				tileObj.click(function() {
-					$('.tile').off();
-					self.p1.checkGuess($(this)).then(function() {
-						self.isGameOver();
-						alert('wait until click');
-					});
-					humanTurn.resolve();
-				});
-			};
-
-			//AI turn
-			humanTurn.done(function() {
-				self.p2.guess();
-				self.isGameOver;
-				turn.resolve();
-			})
-
-			return turn;
-			
-			*/
-
-
-
-
-			//assignClickEvents.then(self.p1.getTile).then(self.p1.checkGuess).then(self.isGameOver);
-		
-
-
-
-
-
-
-		//THIS STILL WORKS
-
-			//DOUBLE CLICKING GIVES THE AI TWO TURNS, BUT YOU ONLY ONE.
-			//MAY NEED TO FOLD THE .DONE()INTO TURN CHECK IF STATEMENT
-		  
-			var self = this;
-			var clicked = new $.Deferred();
-			var humanTurn;
 			console.log(self.turns);
 
+			//Assign click event to all guessable spaces.
 			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
 				var coord = this.p1.board.guessableSpaces[i];
 				var tileObj = this.p1.objectify(coord);
 				tileObj.click(function() {
-		  			//var clicked = new $.Deferred();
-					
+		  			
+					//Only allow clicking on player's turn
 					if(self.p1.turn) {
+						
 						self.p1.turn = false;
 						
 						var tile = $(this);
-						//alert(tile);
-						//console.log(tile.attr('data-coord'));
-						console.log(this);
+						
+						//turn off events on a clicked tile
 						tile.off();
 
-						humanTurn = self.p1.checkGuess(tile); //was $this
-						console.log(humanTurn);
+						//Check human's guess
+						self.p1.checkGuess(tile);	
 				
 
-					}
 			
-
-					humanTurn.done(function() {
-						
+						//After human's turn is done, check game, then run AI turn, then check game again.		
 
 						if(self.isGameOver()) {
 							setTimeout(function(){
@@ -952,54 +847,24 @@
 						//AI Guess (after pause) and check game
 						setTimeout(function() {
 							self.p2.guess();
+
 							if(self.isGameOver()) {
 								setTimeout(function(){
 									self.endGame();
-								}, 2500);
+								}, 1000);
 							}
-						}, 1200);
 
+						}, 1200);
 						
 						self.turns++;
-						console.log(self.turns);
-					});
-				
+						console.log(self.turns);											
+					}				
 
 				});
 		
 			}
 		
 		}
-
-		//delete
-		this.assignClickEvents = function() {
-			var dfd = new $.Deferred();
-			var clicked = new $.Deferred();
-			//alert('assigning');
-			var self = this;
-			var promise;
-			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
-				var coord = this.p1.board.guessableSpaces[i];
-				var tileObj = this.p1.objectify(coord);
-				tileObj.click(function() {
-					if(self.p1.turn) {
-
-						self.p1.turn == false;
-						promise = self.humanTurn($(this), self);
-					
-						//console.log(promise.state());
-						clicked.resolve();
-					}
-				});
-			}
-
-			clicked.done(function() {
-				dfd.resolve();
-			});
-
-			return dfd.promise();
-		}
-
 	}
 	window.Game = Game;
 
