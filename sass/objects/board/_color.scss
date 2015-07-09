@@ -1,0 +1,19 @@
+.ship {
+  background-color: gray;
+}
+
+.ai-board .ship {
+  background-color: white;
+}
+
+.ai-board .ship.hit{
+  background-color: red;
+}
+
+.hit {
+  background-color: red;
+}
+
+.miss {
+  background-color: blue;
+}

@@ -1,0 +1,17 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  position: relative;
+}
+
+@import "variables/variables";
+
+@import "objects/board/board";
+
+@import "objects/scoreboard/scoreboard";

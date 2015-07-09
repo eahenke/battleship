@@ -1,0 +1,73 @@
+.board-wrap {
+  margin-left: $board_margin * 1px;
+  //margin-right: auto;
+  width: (($board_size * 2) + $board_margin) * 1px;
+  height: auto;
+  overflow: hidden;
+}
+
+.board:first-child {
+  float: left;
+}
+
+.board:nth-child(2) {
+  float: right;
+}
+
+.board {
+  position: relative; 
+  width: ($tile_size + ($tile_size * 10)) * 1px;
+  height: ($tile_size + ($tile_size * 10)) * 1px;
+
+  //float: left;
+}
+
+.game-area {
+  position: absolute;
+  top: $tile_size * 1px;
+  left: $tile_size * 1px;
+
+  width: ($tile_size * 10) * 1px;
+  height: ($tile_size * 10) * 1px;
+}
+
+.game-area > .tile {
+  float: left;
+  border: 1px solid black;
+}
+
+.tile {
+  /*border: 1px solid black;*/
+  width: $tile_size * 1px;
+  height: $tile_size * 1px;
+
+  text-align: center;
+  font-size: 2em;
+
+}
+
+.row-label {
+  position: absolute;
+  top: $tile_size * 1px;
+  left: 0px;
+  height: $tile_size * 10 * 1px;
+  width: $tile_size * 1px;
+  overflow: hidden;
+}
+
+.column-label {
+  position: absolute;
+  top: 0px;
+  left: $tile_size * 1px;
+  height: $tile_size * 1px;
+  width: $tile_size * 10 * 1px;
+  overflow: hidden;
+}
+
+.column-label > .tile {
+  float: left;
+}
+
+.clear {
+  clear: both;
+}
