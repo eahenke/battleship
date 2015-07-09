@@ -22,6 +22,7 @@
 		return this.row + '-' + this.col;		
 	};
 
+	//Add tile coordinate or array of coordinates to ship's position property
 	Ship.prototype.addPosition = function(coords) {
 		if(coords.constructor === String) {
 			this.positions.push(coords);
@@ -35,21 +36,12 @@
 		}
 	};
 
+	//Decrease hit points in case of hit
 	Ship.prototype.hit = function() {
 		this.hitPoints--;
 		console.log("Hit " + this.shipType + "! " + this.hitPoints + " hits remaining.");
-		/*
-		if(! this.checkSink()) {
-		}
-		*/
 	};
 
-	Ship.prototype.checkSink = function() {
-		if(this.hitPoints <= 0) {
-			console.log(this.shipType + " has sunk!");
-			return true;
-		}
-	};
 
 	Ship.prototype.initialize = function(row, col, dir) {
 		this.row = row;
@@ -61,6 +53,8 @@
 
 
 	//SHIP SUBCLASSES
+	//Instances of Ship, with differing names and lengths.
+	
 	function Carrier(row, col, dir){
 		Ship.call(this, 'Carrier', 5);
 		this.initialize(row, col, dir);
@@ -171,6 +165,7 @@
 		}
 	}
 
+	//Checks if ship is sunk and removes if so
 	Fleet.prototype.checkSink = function(ship) {
 		if(ship.hitPoints <= 0) {
 			console.log(ship.shipType + " has sunk!");
@@ -179,13 +174,11 @@
 		}	
 	}
 
+	//Checks if active ships still in fleet
 	Fleet.prototype.checkFleet = function() {
 		if(this.activeShips.length === 0) {
-			//console.log("Game over, you win!");
-			//$('.game-area .tile').off();
 			return false;
-		} else {
-			//console.log(this.activeShips);			
+		} else {			
 			return true;
 		}
 	}
@@ -200,6 +193,8 @@
 		this.guessableSpaces = [];
 		this.owner = player;
 		this.selector = '.' + this.owner + '-board';
+
+		//Setup
 		this.initialize(player);
 	}
 	window.Board = Board;
@@ -208,6 +203,7 @@
 		constructor: Board
 	};
 
+	//Sets up new board
 	Board.prototype.initialize = function(player) {
 		var divs = '';
 		for(var i = 0; i < this.rows.length; i++) {
@@ -254,6 +250,8 @@
 		}
 	}
 
+	//For a new ship, gives a random location, and checks if space available on board.
+	//If so, returns array of tiles occupied by ship
 	Board.prototype.checkSpaces = function(ship) {
 		var row = ship.row;
 		var col = ship.col;
@@ -312,6 +310,9 @@
 		return shipTiles;			
 	}
 
+	//Create new ship objects for each type of ship in fleet.
+	//Currently gives random locations to all ships
+	//If no space for ship, retries until there is.
 	Board.prototype.addShips = function(fleet) {
 		for(var ship in fleet.shipsInFleet) {
 			var typeOfShip = window[ship];
@@ -338,6 +339,7 @@
 		}
 	}
 
+	//Adds ship to fleet, and adds ship class to appropriate board tiles.
 	Board.prototype.drawShip = function(ship, fleet) {
 		fleet.addShip(ship);
 		this.removeSpace('available', ship.positions);
@@ -347,24 +349,24 @@
 		}
 	}
 
+	//Check hit vs miss.
 	//Must pass a DOM object
-	Board.prototype.checkHit = function(tile) {			
+	Board.prototype.checkHit = function(tileObj) {			
 
-			//console.log(tile.attr('data-coord'));
-
-			if(tile.hasClass('ship')) {
+			if(tileObj.hasClass('ship')) {
 				return true;
 			} else {
 				return false;
 			}
 		}
 
+	//Updates board in case of miss
 	Board.prototype.miss = function(tile) {
 			tile.addClass('miss');
 			this.removeSpace('guessable', tile.attr('data-coord'));
-			//this.turns--;
 		}
 
+	//In case of hit, returns which ship object was hit
 	Board.prototype.determineShip = function(tile, fleet) {
 		var tileID;
 
@@ -387,20 +389,12 @@
 		return whichShip;
 	}
 
-	/*
-	Board.prototype.checkFleet = function(fleet) {
-		console.log(fleet.activeShips);
-	}
-	*/
-
-
 
 	//PLAYER CLASS
 	function Player(playerType) {
 		this.playerType = playerType;
 		this.enemy;
 
-		this.turn = true;
 
 		this.board = new Board(this.playerType);
 		this.fleet = new Fleet();
@@ -413,6 +407,7 @@
 		constructor: Player
 	}
 
+	//turns tile string to jQuery tile object.
 	Player.prototype.objectify = function(tile) {
 		return $(this.enemy.board.selector + ' .tile[data-coord="' + tile + '"]');
 	}
@@ -422,6 +417,7 @@
 	//Human Subclass
 	function Human() {
 		Player.call(this, 'human');
+		this.turn = true;
 	}
 	window.Human = Human;
 	Human.prototype = Object.create(Player.prototype);
@@ -429,18 +425,20 @@
 
 
 	
-
+	//Checks hit/miss status of human guess.
 	Human.prototype.checkGuess = function(tileObj) {
 		console.log(this);
 		var self = this;
 
 		var tile = tileObj.attr('data-coord');
 
-		
+
 		if(!tileObj.hasClass('hit') && !tileObj.hasClass('miss')) {
 			
 			var board = this.enemy.board;
 			
+
+			//REFACTOR WITH BOARDUPDATE - SEE AI CLASS BELOW
 			if(board.checkHit(tileObj)) {
 				tileObj.addClass('hit');
 				var ship = board.determineShip(tile, this.enemy.fleet);
@@ -456,34 +454,6 @@
 		}
 
 	}
-
-	Human.prototype.guess = function() {
-	
-		/*
-		this.turn = true;
-		var self = this;
-		var tiles = this.enemy.board.guessableSpaces;
-
-		for(var i = 0; i < tiles.length; i++) {
-			
-			self.objectify(tiles[i]).click(function() {
-				
-				var tile = ($(this).attr('data-coord'));
-				self.checkGuess(tile);
-			});
-		}
-		*/
-		var tile = this.getTile();
-		if(tile) {
-			this.checkGuess(tile);
-			
-		}
-	}
-
-
-
-
-
 
 
 	//AI Subclass
@@ -505,7 +475,7 @@
 	AI.prototype = Object.create(Player.prototype);
 	AI.prototype.constructor = AI;
 
-
+	//AI turn.  Guesses tiles based on known ship locations, if any, and checks hit/miss status.
 	AI.prototype.guess = function() {
 		var board = this.enemy.board;
 
@@ -533,15 +503,17 @@
 			var ship = board.determineShip(tile, this.enemy.fleet);
 			ship.hit();
 			this.checkTarget(tile, ship);
-			//this.enemy.fleet.checkFleet();
 
 		} else { //miss
 			board.miss(tileObj);			
 		}		
 		this.guessInfo['lastTileGuessed'] = tile;
+		
+		//Allow human to guess again
 		this.enemy.turn = true;
 	}
 
+	//Update game board in case of hit.
 	AI.prototype.boardUpdate = function(tile, tileObj) {
 		var board = this.enemy.board;
 		tileObj.addClass('hit');
@@ -549,15 +521,17 @@
 	}
 
 
+	//Checks if hit ship was the target ship, or an accidental hit.
+	//If so, save ship location for later use.
 	AI.prototype.checkTarget = function(tile, ship) {
 		//accidental hit
 		if(this.guessInfo['targetShip'] && ship != this.guessInfo['targetShip'] ) {
-			//alert('diff ship');
+			
 			this.guessInfo['knownShips'].push(tile);
 			console.log('known ships added: ');
 			console.log(this.guessInfo['knownShips']);
 
-			//check it's sink status anyway
+			//check its sink status anyway
 			if(this.enemy.fleet.checkSink(ship)) {
 				this.removeSunkFromMemory(ship);				
 			}
@@ -572,6 +546,7 @@
 		}
 	}
 
+	//Updates the information the AI remembers about ship placement and hits
 	AI.prototype.updateGuessInfo = function(tile, ship) {
 		this.guessInfo['targetShip'] = this.guessInfo['targetShip'] || ship;					
 		this.guessInfo['firstTileHit'] = this.guessInfo['firstTileHit'] || tile;
@@ -583,6 +558,9 @@
 		}
 	}
 
+	//Get a tile based on educatedGuess.
+	//If no possible tile (tile is out of bounds or already taken) guess again in the other direction,
+	//based on first tile hit.
 	AI.prototype.getTile = function() {
 		var tile = this.educatedGuess();
 		if(! tile) {
@@ -593,12 +571,13 @@
 		return tile;
 	}
 
+	//If there are knownShips, make first the target ship and update guessInfo and guess based on that ship.
+	//Otherwise choose a random tile.
 	AI.prototype.findATarget = function() {
 		var board = this.enemy.board;
 
 		//find a new target
 		if(this.guessInfo['knownShips'].length) {
-			//alert('searching known ships');
 
 			var targetTile = this.guessInfo['knownShips'][0];
 			var ship = board.determineShip(targetTile, this.enemy.fleet);
@@ -616,6 +595,7 @@
 		return tile;
 	}
 
+	//Remove sunk ships from knownShips, in case one is sunk on accidental hits, the AI won't try and hit it again later.
 	AI.prototype.removeSunkFromMemory = function(ship) {		
 		for(var i = 0; i < ship.positions.length; i++) {
 			var shipTile = ship.positions[i];
@@ -631,7 +611,7 @@
 
 
 
-	//clear all except known ships
+	//Clear all information except known ships
 	AI.prototype.clearGuessInfo = function() {
 		this.guessInfo["firstTileHit"] = null;
 		this.guessInfo["lastTileHit"] = null;
@@ -640,6 +620,7 @@
 		this.guessInfo["lastShipOrientation"] = null;
 	}
 
+	//Finds the orientation of the current target ship
 	AI.prototype.findOrient = function() {
 		var firstHit = this.guessInfo['firstTileHit'];
 		var newHit = this.guessInfo['lastTileHit'];
@@ -657,19 +638,15 @@
 		} else if (col1 == col2) {
 			orient = 'vertical'
 		} else {
-			console.log('bad input!');
+			//console.log('bad input!');
 		}
 
 		return orient;
 
 	}
 
-	/*
-	AI.prototype.objectify = function(tile) {
-		return $(this.enemy.board.selector + ' .tile[data-coord="' + tile + '"]');
-	}
-	*/
-
+	
+	//Randomly selects an available tile to guess
 	AI.prototype.randomGuess = function() {
 		var tile = getRandom(this.enemy.board.guessableSpaces);
 		//var tileObj = $(this.enemy.board.selector + ' .tile[data-coord="' + tile + '"]');
@@ -677,7 +654,7 @@
 	}
 
 
-
+	//Selects next tile to guess based on knowledge of current target
 	AI.prototype.educatedGuess = function(startFromTile) {
 		var lastTile =  startFromTile || this.guessInfo['lastTileHit']; 
 
@@ -719,95 +696,103 @@
 
 	//GAME CLASS
 	function Game() {
-		//this.maxTurns = 20;
-		this.turns = 0;
-		this.over = false;		
+		this.turns;
 		this.p1;
 		this.p2;
 
 		this.winner;
 		this.loser;
-		
-		this.newGame = function() {
-			this.p1 = new Human();
-			this.p2 = new AI();
+	}
+	window.Game = Game;
 
-			this.assignEnemy(this.p1, this.p2);
+	Game.prototype = {
+		constructor: Game
+	};
 
-			console.log(this.p1);
-			console.log(this.p2);
-		}
+	
+	//Sets up new game
+	Game.prototype.newGame = function() {
+		this.p1 = new Human();
+		this.p2 = new AI();
 
-		this.turnControl = function() {
-			if(this.whoseTurn == 'p1') {
-				this.p1.guess();
-				this.whoseTurn = 'p2';
+		this.assignEnemy(this.p1, this.p2);
+
+		this.turns = 0;
+		//console.log(this.p1);
+		//console.log(this.p2);
+	}
+
+	//Assigns each player an enemy so they may see opponents board, check fleet status, etc
+	Game.prototype.assignEnemy = function(p1, p2) {
+		p1.enemy = p2;
+		p2.enemy = p1;
+	}
+
+	//Checks both player's fleets.  If one is totally destroyed assigns winner and loser and returns true
+	Game.prototype.isGameOver = function() {
+		if(!this.p1.fleet.checkFleet() || !this.p2.fleet.checkFleet() ) {			
+
+			if(!this.p1.fleet.checkFleet()) {
+				this.winner = 'Player 2';
+				this.loser = 'Player 1';
 			} else {
-				this.p2.guess();
-				this.whoseTurn = 'p1';
+				this.winner = 'Player 1';
+				this.loser = 'Player 2';
 			}
-		}
 
-		this.assignEnemy = function(p1, p2) {
-			p1.enemy = p2;
-			p2.enemy = p1;
+			return true;
+
+		} else {
+			return false;
 		}
+	}
+
+	//Ends game and displays winner/loser message
+	Game.prototype.endGame = function() {
+		var endMsg = '<p>' + this.loser + ' has lost all ships! ' + this.winner + ' wins!</p>';
+		$('.board-wrap').empty();
+		$('.board-wrap').html(endMsg);
+	}
+
+
+
+	//Main game area.  Assigns click events, runs human and AI turns, checks for winners.
+	Game.prototype.gameLoop = function() {
+				  
+		var self = this;
+		console.log(self.turns);
+
+		//Assign click event to all guessable spaces.
+		for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
+			var coord = this.p1.board.guessableSpaces[i];
+			var tileObj = this.p1.objectify(coord);
+			tileObj.click(function() {
+	  			
+				//Only allow clicking on player's turn
+				if(self.p1.turn) {
+					
+					self.p1.turn = false;
+					
+					var tile = $(this);
+					
+					//turn off events on a clicked tile
+					tile.off();
+
+					//Check human's guess
+					self.p1.checkGuess(tile);	
 
 		
-		this.isGameOver = function() {
-			if(!this.p1.fleet.checkFleet() || !this.p2.fleet.checkFleet() ) {
-				this.over = true;
-				//alert('game status');
+					//After human's turn is done, check game status.
 
-				if(!this.p1.fleet.checkFleet()) {
-					this.winner = 'Player 2';
-					this.loser = 'Player 1';
-				} else {
-					this.winner = 'Player 1';
-					this.loser = 'Player 2';
-				}
+					if(self.isGameOver()) {
+						setTimeout(function(){
+							self.endGame();
+						}, 1000);
+					}
 
-				return true;
-
-			}
-		}
-
-		this.endGame = function() {
-			var endMsg = '<p>' + this.loser + ' has lost all ships! ' + this.winner + ' wins!</p>';
-			$('.board-wrap').empty();
-			$('.board-wrap').html(endMsg);
-		}
-
-
-
-		//WORKING
-		this.gameLoop = function() {
-					  
-			var self = this;
-			console.log(self.turns);
-
-			//Assign click event to all guessable spaces.
-			for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
-				var coord = this.p1.board.guessableSpaces[i];
-				var tileObj = this.p1.objectify(coord);
-				tileObj.click(function() {
-		  			
-					//Only allow clicking on player's turn
-					if(self.p1.turn) {
-						
-						self.p1.turn = false;
-						
-						var tile = $(this);
-						
-						//turn off events on a clicked tile
-						tile.off();
-
-						//Check human's guess
-						self.p1.checkGuess(tile);	
-				
-
-			
-						//After human's turn is done, check game, then run AI turn, then check game again.		
+					//AI Guess (after pause) and check game
+					setTimeout(function() {
+						self.p2.guess();
 
 						if(self.isGameOver()) {
 							setTimeout(function(){
@@ -815,33 +800,18 @@
 							}, 1000);
 						}
 
-						//AI Guess (after pause) and check game
-						setTimeout(function() {
-							self.p2.guess();
+					}, 1200);
+					
+					self.turns++;
+					console.log(self.turns);											
+				}				
 
-							if(self.isGameOver()) {
-								setTimeout(function(){
-									self.endGame();
-								}, 1000);
-							}
-
-						}, 1200);
-						
-						self.turns++;
-						console.log(self.turns);											
-					}				
-
-				});
-		
-			}
-		
+			});
+	
 		}
+	
 	}
-	window.Game = Game;
-
-	Game.prototype = {
-		constructor: Game
-	};
+	
 
 
 
@@ -850,40 +820,7 @@
 	var game = new Game();
 	game.newGame();
 	
-	
-	
-		game.gameLoop();
+	game.gameLoop();
 
-
-
-	//TURN COUNTING AND ALTERNATING DO NOT WORK RIGHT. 
-
-/*
-	for(var i = 0; i < 5; i++) {
-		game.p1.guess();
-		game.turns++;
-		$('.turns').text(game.turns);
-	}
-*/		
-	
-
-	
-	/*
-	var ai = new AI();
-	var human = new Human();
-	game.assignEnemy(human, ai);
-	
-	for(var i = 0; i < 5; i++) {
-		human.guess();
-		ai.guess();
-	}
-	*/
-	
-	/*
-	for(var i = 0; i < 35; i++) {
-		ai.guess();
-		console.log(ai.guessInfo);	
-	}
-	*/	
 
 })(window);
