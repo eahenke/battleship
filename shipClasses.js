@@ -39,7 +39,22 @@
 	//Decrease hit points in case of hit
 	Ship.prototype.hit = function() {
 		this.hitPoints--;
-		console.log("Hit " + this.shipType + "! " + this.hitPoints + " hits remaining.");
+		//console.log("Hit " + this.shipType + "! " + this.hitPoints + " hits remaining.");
+
+		var hitPlur;
+
+		//Correct plurals
+		if(this.hitPoints == 1) {
+			hitPlur = 'hit';
+		} else {
+			hitPlur = 'hits';
+		}
+
+		//Don't output hit points if sunk, sinking message will display instead.
+		if(this.hitPoints > 0) {
+			gameLog.output("Hit " + this.shipType + "! " + this.hitPoints + " " + hitPlur + " remaining.");			
+		}
+
 	};
 
 
@@ -168,7 +183,10 @@
 	//Checks if ship is sunk and removes if so
 	Fleet.prototype.checkSink = function(ship) {
 		if(ship.hitPoints <= 0) {
-			console.log(ship.shipType + " has sunk!");
+			//console.log(ship.shipType + " has sunk!");
+			gameLog.output(ship.shipType + ' has sunk!');
+
+
 			this.removeShip(ship);
 			return true;
 		}	
@@ -351,6 +369,7 @@
 
 	//Check hit vs miss.
 	//Must pass a DOM object
+	//At some point change to not rely on the html, check based on ship.positions
 	Board.prototype.checkHit = function(tileObj) {			
 
 			if(tileObj.hasClass('ship')) {
@@ -364,6 +383,8 @@
 	Board.prototype.miss = function(tile) {
 			tile.addClass('miss');
 			this.removeSpace('guessable', tile.attr('data-coord'));
+
+			gameLog.output('Miss!');
 		}
 
 	//In case of hit, returns which ship object was hit
@@ -443,6 +464,9 @@
 				tileObj.addClass('hit');
 				var ship = board.determineShip(tile, this.enemy.fleet);
 				ship.hit();
+				//gameLog.output('Hit ' + ship.shipType + '! ' + ship.hitPoints + ' hits remaining!');
+
+
 				this.enemy.fleet.checkSink(ship);
 				
 			} else {
@@ -502,10 +526,13 @@
 
 			var ship = board.determineShip(tile, this.enemy.fleet);
 			ship.hit();
+			//gameLog.output('Hit ' + ship.shipType + '! ' + ship.hitPoints + ' hits remaining!');
+
+
 			this.checkTarget(tile, ship);
 
 		} else { //miss
-			board.miss(tileObj);			
+			board.miss(tileObj);
 		}		
 		this.guessInfo['lastTileGuessed'] = tile;
 		
@@ -771,7 +798,6 @@
 				//Only allow clicking on player's turn
 				if(self.p1.turn) {
 					
-					self.p1.turn = false;
 					
 					var tile = $(this);
 					
@@ -780,6 +806,9 @@
 
 					//Check human's guess
 					self.p1.checkGuess(tile);	
+					
+
+					self.p1.turn = false;
 
 		
 					//After human's turn is done, check game status.
@@ -813,6 +842,46 @@
 	}
 	
 
+	function GameLog() {
+		this.gameLog = $('<div>');
+	}
+	window.GameLog = GameLog;
+
+	GameLog.prototype = {
+		constructor: GameLog
+	}
+
+	GameLog.prototype.initialize = function() {
+		
+		this.gameLog.addClass('gamelog');
+		
+		//buffer to allow for top margin on gamelog
+		var clear = $('<div>').addClass('clear');
+		$('.board-wrap').append(clear);
+
+		//attach gamelog
+		$('.board-wrap').append(this.gameLog);
+
+		this.gameLog.append("<p>new text here!</p>");
+	}
+
+	//Adds new messages to the gameLog
+	GameLog.prototype.output = function(message) {
+		if(game.p1.turn) {
+			var actor = "Human";
+		} else {
+			var actor = "AI";
+		}
+
+		var message = '<p>' + actor + ": " + message + '</p>';
+		this.gameLog.append(message);
+
+		//Scroll to bottom when adding new content
+		//Access DOM object directly, not the jQuery wrapper
+		this.gameLog[0].scrollTop = this.gameLog[0].scrollHeight;
+		//alert(this.gameLog.scrollHeight);
+	}
+
 
 
 
@@ -820,7 +889,15 @@
 	var game = new Game();
 	game.newGame();
 	
+	var gameLog = new GameLog();
+	gameLog.initialize();
+	
+	
+
+
+
 	game.gameLoop();
+
 
 
 })(window);
