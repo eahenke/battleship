@@ -127,6 +127,16 @@ body {
   border: 2px solid black;
 }
 
+/* line 10, ../sass/objects/scoreboard/_scoreboard.scss */
+.hitpoint {
+  width: 20px;
+  height: 15px;
+  margin-right: 5px;
+  border: 1px solid black;
+  border-radius: 60%;
+  display: inline-block;
+}
+
 /* line 1, ../sass/objects/gamelog/_gamelog.scss */
 .gamelog {
   width: 90%;
