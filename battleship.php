@@ -113,6 +113,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="functions.js"></script>
 	<script src="shipClasses.js"></script>
-	<script src="oopbattleship.js"></script>
+	<!--<script src="oopbattleship.js"></script> -->
 
 	</body>
