@@ -544,6 +544,29 @@
 		this.enemy.turn = true;
 	}
 
+	AI.prototype.getNeighbors = function(tile) {
+		var row = tile.split('-')[0];
+		var col = tile.split('-')[1];			
+		
+		var north = numToLetter(letterToNum(row) - 1) + '-' + col;			
+		var south = numToLetter(letterToNum(row) + 1) + '-' + col;			
+		var east = row + '-' + (parseInt(col) + 1);			
+		var west = row + '-' + (parseInt(col) - 1);
+		var possibleNeighbors = [north, south, east, west];
+		var neighbors = [];
+
+		for(var i = 0; i < possibleNeighbors.length; i++) {
+			var targ = possibleNeighbors[i];
+			if(this.enemy.board.guessableSpaces.indexOf(targ) > -1) {		
+				neighbors.push(targ);
+			}
+		}
+		console.log('neighbors: ' , neighbors);		
+		return neighbors;
+
+
+	}
+
 	//Update game board in case of hit.
 	AI.prototype.boardUpdate = function(tile, tileObj) {
 		var board = this.enemy.board;
@@ -620,7 +643,16 @@
 			var tile = this.educatedGuess();
 
 		} else {
-			var tile = this.randomGuess();				
+			var tile = this.randomGuess();
+			console.log('first try tile:', tile);
+			
+			//prevents from guessing singletons when random guessing.
+
+			while( !this.getNeighbors(tile).length ) {
+				alert('singleton!');
+
+				var tile = this.randomGuess();
+			}				
 		}
 
 		return tile;
