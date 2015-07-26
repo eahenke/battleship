@@ -464,6 +464,10 @@
 				tileObj.addClass('hit');
 				var ship = board.determineShip(tile, this.enemy.fleet);
 				ship.hit();
+
+				//testing
+				console.log('hit it');
+				scoreboard.update(ship);
 				//gameLog.output('Hit ' + ship.shipType + '! ' + ship.hitPoints + ' hits remaining!');
 
 
@@ -817,22 +821,26 @@
 						setTimeout(function(){
 							self.endGame();
 						}, 1000);
+					} else {
+						
+						//AI Guess (after pause) and check game
+						setTimeout(function() {
+							self.p2.guess();
+
+							if(self.isGameOver()) {
+								setTimeout(function(){
+									self.endGame();
+								}, 1000);
+							}
+
+						}, 1200);
+
+						
+						self.turns++;
+						console.log(self.turns);											
 					}
 
-					//AI Guess (after pause) and check game
-					setTimeout(function() {
-						self.p2.guess();
-
-						if(self.isGameOver()) {
-							setTimeout(function(){
-								self.endGame();
-							}, 1000);
-						}
-
-					}, 1200);
 					
-					self.turns++;
-					console.log(self.turns);											
 				}				
 
 			});
@@ -882,7 +890,43 @@
 		//alert(this.gameLog.scrollHeight);
 	}
 
+	function Scoreboard() {
+		this.scoreboard = $('.scoreboard');
+	}
+	window.Scoreboard = Scoreboard;
 
+	Scoreboard.prototype = {
+		constructor: Scoreboard
+	}
+
+	Scoreboard.prototype.initialize = function() {
+		var fleet = game.p2.fleet.totalShips;
+		//console.log(fleet);
+		var html = '';
+		for(var i = 0; i < fleet.length; i++) {
+			console.log(fleet[i]);
+			var ship = fleet[i];
+			var shipID = ship.shipType + ship.coord;
+			html += '<div class="' + shipID + '">' + ship.shipType + '<div class="hp-wrapper">';
+			var HP = ship.hitPoints;
+
+			for(var j = 0; j < HP; j++) {
+				html += '<div class="hitpoint hit"></div>';
+			}
+
+			html += '</div></div>';
+		}
+
+		this.scoreboard.append(html);
+	}
+
+	Scoreboard.prototype.update = function(ship) {
+		var shipClass = ship.shipType + ship.coord;
+		//alert(shipClass + ' hit');
+		console.log($('.' + shipClass + ' .hit'));
+		$('.' + shipClass + ' .hit').first().removeClass('hit');
+
+	}
 
 
 
@@ -891,6 +935,9 @@
 	
 	var gameLog = new GameLog();
 	gameLog.initialize();
+
+	var scoreboard = new Scoreboard();
+	scoreboard.initialize();
 	
 	
 
