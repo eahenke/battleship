@@ -38,7 +38,7 @@ body {
   height: 440px;
 }
 
-/* line 25, ../sass/objects/board/_size.scss */
+/* line 23, ../sass/objects/board/_size.scss */
 .game-area {
   position: absolute;
   top: 40px;
@@ -46,23 +46,33 @@ body {
   width: 400px;
   height: 400px;
 }
-
-/* line 34, ../sass/objects/board/_size.scss */
-.game-area > .tile {
-  float: left;
-  border: 1px solid black;
+/* line 33, ../sass/objects/board/_size.scss */
+.game-area .tile:first-child {
+  border-top-left-radius: 25px;
+}
+/* line 37, ../sass/objects/board/_size.scss */
+.game-area .tile:nth-child(10) {
+  border-top-right-radius: 25px;
+}
+/* line 41, ../sass/objects/board/_size.scss */
+.game-area .tile:nth-child(91) {
+  border-bottom-left-radius: 25px;
+}
+/* line 45, ../sass/objects/board/_size.scss */
+.game-area .tile:nth-child(100) {
+  border-bottom-right-radius: 25px;
 }
 
-/* line 39, ../sass/objects/board/_size.scss */
+/* line 55, ../sass/objects/board/_size.scss */
 .tile {
-  /*border: 1px solid black;*/
   width: 40px;
   height: 40px;
+  float: left;
   text-align: center;
   font-size: 2em;
 }
 
-/* line 49, ../sass/objects/board/_size.scss */
+/* line 65, ../sass/objects/board/_size.scss */
 .row-label {
   position: absolute;
   top: 40px;
@@ -72,7 +82,7 @@ body {
   overflow: hidden;
 }
 
-/* line 58, ../sass/objects/board/_size.scss */
+/* line 74, ../sass/objects/board/_size.scss */
 .column-label {
   position: absolute;
   top: 0px;
@@ -82,39 +92,34 @@ body {
   overflow: hidden;
 }
 
-/* line 67, ../sass/objects/board/_size.scss */
-.column-label > .tile {
-  float: left;
-}
-
-/* line 71, ../sass/objects/board/_size.scss */
+/* line 83, ../sass/objects/board/_size.scss */
 .clear {
   clear: both;
 }
 
-/* line 1, ../sass/objects/board/_color.scss */
-.ship {
-  background-color: gray;
-}
-
-/* line 5, ../sass/objects/board/_color.scss */
-.ai-board .ship {
-  background-color: white;
-}
-
-/* line 9, ../sass/objects/board/_color.scss */
-.ai-board .ship.hit {
-  background-color: red;
+/* line 3, ../sass/objects/board/_color.scss */
+.game-area .tile {
+  background-color: #3399FF;
+  border: 2px solid #297ACC;
 }
 
 /* line 13, ../sass/objects/board/_color.scss */
-.hit {
-  background-color: red;
+.board .ship.hit {
+  background-color: #CC0000;
+}
+/* line 17, ../sass/objects/board/_color.scss */
+.board .miss {
+  background-color: #0033CC;
 }
 
-/* line 17, ../sass/objects/board/_color.scss */
-.miss {
-  background-color: blue;
+/* line 26, ../sass/objects/board/_color.scss */
+.human-board .ship {
+  background-color: gray;
+}
+
+/* line 32, ../sass/objects/board/_color.scss */
+.hit {
+  background-color: red;
 }
 
 /* line 1, ../sass/objects/scoreboard/_scoreboard.scss */
@@ -122,12 +127,14 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  height: 500px;
-  width: 200px;
-  border: 2px solid black;
+  height: 300px;
+  width: 250px;
+  padding-left: 1em;
+  border: 3px solid #297ACC;
+  border-radius: 25px;
 }
 
-/* line 10, ../sass/objects/scoreboard/_scoreboard.scss */
+/* line 15, ../sass/objects/scoreboard/_scoreboard.scss */
 .hitpoint {
   width: 20px;
   height: 15px;
@@ -137,7 +144,7 @@ body {
   display: inline-block;
 }
 
-/* line 1, ../sass/objects/gamelog/_gamelog.scss */
+/* line 4, ../sass/objects/gamelog/_gamelog.scss */
 .gamelog {
   width: 90%;
   height: 150px;

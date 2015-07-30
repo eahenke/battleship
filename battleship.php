@@ -105,9 +105,10 @@
 
 		<div class="scoreboard">
 			<p>SCOREBOARD</p>
-			<p>Turns: <span class="turns"></span></p>
-			<p>Ships:</p>
-			<div class="ships-left"></div>
+			<div class="ships-left">
+				<p>Enemy ships remaining:</p>
+			</div>
+			
 		</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
