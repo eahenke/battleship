@@ -1,3 +1,9 @@
+@import "mixins/mixins";
+
+@import "variables/variables";
+
+@import "objects/objects";
+
 html {
   box-sizing: border-box;
 }
@@ -10,6 +16,8 @@ body {
   position: relative;
 }
 
-@import "variables/variables";
+h1 {
+  text-align: center;
+}
 
-@import "objects/objects";
+

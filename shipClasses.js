@@ -649,7 +649,7 @@
 			//prevents from guessing singletons when random guessing.
 
 			while( !this.getNeighbors(tile).length ) {
-				alert('singleton!');
+				
 
 				var tile = this.randomGuess();
 			}				
@@ -896,13 +896,14 @@
 		this.gameLog.addClass('gamelog');
 		
 		//buffer to allow for top margin on gamelog
+		//may no longer be needed
 		var clear = $('<div>').addClass('clear');
-		$('.board-wrap').append(clear);
+		//$('.info-area').append(clear);
 
 		//attach gamelog
-		$('.board-wrap').append(this.gameLog);
+		$('.gamelog-container').append(this.gameLog);
 
-		this.gameLog.append("<p>new text here!</p>");
+		
 	}
 
 	//Adds new messages to the gameLog

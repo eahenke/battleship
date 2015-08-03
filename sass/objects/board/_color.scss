@@ -1,19 +1,36 @@
-.ship {
-  background-color: gray;
+.game-area {
+
+  .tile {
+    background-color: $board_color;
+    border: 2px solid $board_border_color;
+
+  }
 }
 
-.ai-board .ship {
-  background-color: white;
+
+.board {
+  
+  .ship.hit {
+    background-color: $ship_hit;
+  }
+
+  .miss {
+    background-color: $board_miss;
+  }
+
 }
 
-.ai-board .ship.hit{
-  background-color: red;
+
+.human-board {
+  
+  .ship {
+    background-color: $ship_color;
+  }
+
 }
 
 .hit {
   background-color: red;
 }
 
-.miss {
-  background-color: blue;
-}
+
