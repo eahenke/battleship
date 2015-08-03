@@ -1,0 +1,18 @@
+.info-area {
+	float: right;
+  width: 250px;
+
+  margin-top: 0em;
+
+
+  h2 {
+    font-size: 1em;
+    margin-top: 0.5em;
+
+    text-align: center;
+  }
+}
+
+@import "scoreboard";
+
+@import "gamelog";

@@ -1,15 +1,12 @@
 .scoreboard {
-  position: absolute;
-  top: 0;
-  right: 0;
 
   height: 300px;
-  width: 250px;
-
   padding-left: 1em;
 
   border: 3px solid $board_border_color;
-  border-radius: $board_border_radius;
+  // border-radius: $board_border_radius;
+
+
 }
 
 .hitpoint {

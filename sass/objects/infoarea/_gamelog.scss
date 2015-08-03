@@ -1,0 +1,18 @@
+.gamelog-container {
+  width: 250px;
+  height: 225px;  
+}
+
+
+.gamelog {
+  width: 250px;
+  height: 220px; //helps prevent cut off lines on the top when scrolled
+
+  padding: .5em;
+  margin-top: 0em;
+  
+  overflow-y: auto;
+  float: right;
+
+  border: 3px solid $board_border_color;
+}
