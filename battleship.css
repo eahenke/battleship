@@ -169,6 +169,30 @@
   border-radius: 5px;
 }
 
+/* line 2, ../sass/objects/stats/_stats.scss */
+.stats-area h2 {
+  color: #E6E6E6;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 3px 3px #000;
+}
+
+/* line 11, ../sass/objects/stats/_stats.scss */
+.player-stats {
+  width: 45%;
+  display: inline-block;
+  background-color: #3399FF;
+  margin-left: 2em;
+  border-radius: 25px;
+  border: 3px solid #297ACC;
+  padding: 1em;
+}
+/* line 21, ../sass/objects/stats/_stats.scss */
+.player-stats h3 {
+  text-align: center;
+  text-transform: uppercase;
+}
+
 /* line 7, ../sass/battleship.scss */
 html {
   box-sizing: border-box;
