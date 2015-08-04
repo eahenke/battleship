@@ -418,6 +418,11 @@
 
 		this.hits = 0;
 		this. misses = 0;
+		this.currentStreak = 0;
+		this.bestStreak = 0;
+
+		this.currentDrySpell = 0;
+		this.longestDrySpell = 0;
 
 
 		this.board = new Board(this.playerType);
@@ -437,13 +442,62 @@
 	}
 
 	Player.prototype.addHit = function() {
-		this.hits += 1;
+		this.hits++;
 	}
 
 	Player.prototype.addMiss = function() {
-		this.misses += 1;
+		this.misses++;
 	}
 
+	Player.prototype.getTotalHitPoints = function() {
+		var hitPoints = 0;
+		var activeShips = this.fleet.activeShips;
+
+		for(var i = 0; i < activeShips.length; i++) {
+			// console.log(activeShips[i].shipType, activeShips[i].hitpoints);
+			hitPoints += activeShips[i].hitPoints;
+		}
+
+		return hitPoints;
+	}
+
+	Player.prototype.getHitPercent = function() {
+		return Math.round(((this.hits / (this.hits + this.misses)) * 100) * 100) / 100;
+	}
+
+	Player.prototype.increaseStreak = function() {
+		this.currentStreak++;
+	}
+
+	Player.prototype.updateStreak = function() {
+		if(this.currentStreak > this.bestStreak) {
+			this.bestStreak = this.currentStreak;
+		}
+	}
+
+	Player.prototype.increaseDrySpell = function() {
+		this.currentDrySpell++;
+	}
+
+	Player.prototype.updateDrySpell = function() {
+		if(this.currentDrySpell > this.longestDrySpell) {
+			this.longestDrySpell = this.currentDrySpell;
+		}
+	}
+
+	Player.prototype.updateStats = function(outcome) {
+		if(outcome == 'hit') {
+			this.addHit();
+			this.increaseStreak();
+			this.updateStreak();
+			this.currentDrySpell = 0;
+		} else {
+			this.addMiss();
+			this.currentStreak = 0;
+			this.increaseDrySpell();
+			this.updateDrySpell();
+		}
+	}
 
 
 	//Human Subclass
@@ -475,7 +529,9 @@
 				tileObj.addClass('hit');
 				var ship = board.determineShip(tile, this.enemy.fleet);
 				ship.hit();
-				this.addHit();
+				
+				//Player stats
+				this.updateStats('hit');
 
 				scoreboard.update(ship);
 
@@ -483,7 +539,9 @@
 				
 			} else {
 				board.miss(tileObj);
-				this.addMiss();
+				
+				this.updateStats('miss');
+
 			}
 			
 			console.log(tile);
@@ -539,14 +597,16 @@
 
 			var ship = board.determineShip(tile, this.enemy.fleet);
 			ship.hit();
-			this.addHit();
-
+			
+			// Player stats
+			this.updateStats('hit');
 
 			this.checkTarget(tile, ship);
 
 		} else { //miss
 			board.miss(tileObj);
-			this.addMiss();
+			
+			this.updateStats('miss');
 		}		
 		this.guessInfo['lastTileGuessed'] = tile;
 		
@@ -769,7 +829,7 @@
 
 	//GAME CLASS
 	function Game() {
-		this.turns;
+		this.turns = 0;
 		this.p1;
 		this.p2;
 
@@ -787,6 +847,8 @@
 	Game.prototype.newGame = function() {
 		this.p1 = new Human();
 		this.p2 = new AI();
+
+		this.players = [this.p1, this.p2];
 
 		this.assignEnemy(this.p1, this.p2);
 
@@ -825,6 +887,38 @@
 		var endMsg = '<p>' + this.loser + ' has lost all ships! ' + this.winner + ' wins!</p>';
 		$('.board-wrap').empty();
 		$('.board-wrap').html(endMsg);
+
+		this.gameStats();
+	}
+
+	Game.prototype.gameStats = function() {
+
+		var statsArea = $('<div>').addClass('stats-area');
+
+		var statTitle = '<h2>Stats</h2>';
+
+		statsArea.append(statTitle);
+
+		for(var i = 0; i < this.players.length; i++) {
+			var player = this.players[i];
+			var playerName = '<h3>' + player.playerType + '</h3>';
+			var turns = '<p>Turns: ' + this.turns + '</p>';
+			var hits = '<p>Hits: ' + player.hits + '</p>';
+			var misses = '<p>Misses: ' + player.misses + '</p>';
+			var hitPercent = '<p>Hit percentage: ' + player.getHitPercent() + '%</p>';
+			var streak = '<p>Best hit streak: ' + player.bestStreak + '</p>';
+			var drySpell = '<p>Longest dryspell: ' + player.longestDrySpell + '</p>';
+			var hitsRemaining = '<p>Hit points remaining: ' + player.getTotalHitPoints() + '</p>';
+
+			var stats = [playerName, turns, hits, misses, hitPercent, streak, drySpell, hitsRemaining];
+
+			console.log('hp remaining', player.getTotalHitPoints());
+
+			var playerStats = $('<div>').addClass('player-stats');
+			statsArea = statsArea.append(playerStats.append(stats.join('')));
+			$('.board-wrap').append(statsArea);
+
+		}
 	}
 
 
@@ -853,7 +947,7 @@
 					//Check human's guess
 					self.p1.checkGuess(tile);	
 					
-
+					self.turns++;
 					self.p1.turn = false;
 
 		
@@ -878,12 +972,17 @@
 						}, 1200);
 
 						
-						self.turns++;
+						
 						console.log(self.turns);											
 					}
 
 					
 				}				
+
+				if(self.turns > 6) {
+					self.endGame();
+				}
+
 
 			});
 	
@@ -930,7 +1029,6 @@
 		//Scroll to bottom when adding new content
 		//Access DOM object directly, not the jQuery wrapper
 		this.gameLog[0].scrollTop = this.gameLog[0].scrollHeight;
-		//alert(this.gameLog.scrollHeight);
 	}
 
 	function Scoreboard() {

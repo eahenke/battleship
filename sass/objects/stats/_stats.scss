@@ -1,0 +1,25 @@
+.stats-area {
+  h2{
+    color: #E6E6E6;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 3px 3px #000;
+  }
+}
+
+
+.player-stats {
+  width: 45%;
+  display: inline-block;
+
+  background-color: $board_color;
+  margin-left: 2em;
+  border-radius: $board_border_radius;
+  border: 3px solid $board_border_color;
+  padding: 1em;
+
+  h3 {
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
