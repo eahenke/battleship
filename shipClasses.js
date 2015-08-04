@@ -416,6 +416,9 @@
 		this.playerType = playerType;
 		this.enemy;
 
+		this.hits = 0;
+		this. misses = 0;
+
 
 		this.board = new Board(this.playerType);
 		this.fleet = new Fleet();
@@ -431,6 +434,14 @@
 	//turns tile string to jQuery tile object.
 	Player.prototype.objectify = function(tile) {
 		return $(this.enemy.board.selector + ' .tile[data-coord="' + tile + '"]');
+	}
+
+	Player.prototype.addHit = function() {
+		this.hits += 1;
+	}
+
+	Player.prototype.addMiss = function() {
+		this.misses += 1;
 	}
 
 
@@ -464,17 +475,15 @@
 				tileObj.addClass('hit');
 				var ship = board.determineShip(tile, this.enemy.fleet);
 				ship.hit();
+				this.addHit();
 
-				//testing
-				console.log('hit it');
 				scoreboard.update(ship);
-				//gameLog.output('Hit ' + ship.shipType + '! ' + ship.hitPoints + ' hits remaining!');
-
 
 				this.enemy.fleet.checkSink(ship);
 				
 			} else {
 				board.miss(tileObj);
+				this.addMiss();
 			}
 			
 			console.log(tile);
@@ -530,13 +539,14 @@
 
 			var ship = board.determineShip(tile, this.enemy.fleet);
 			ship.hit();
-			//gameLog.output('Hit ' + ship.shipType + '! ' + ship.hitPoints + ' hits remaining!');
+			this.addHit();
 
 
 			this.checkTarget(tile, ship);
 
 		} else { //miss
 			board.miss(tileObj);
+			this.addMiss();
 		}		
 		this.guessInfo['lastTileGuessed'] = tile;
 		

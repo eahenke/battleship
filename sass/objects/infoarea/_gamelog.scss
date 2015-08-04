@@ -14,5 +14,12 @@
   overflow-y: auto;
   float: right;
 
-  border: 3px solid $board_border_color;
+  font-size: 1em;
+  font-weight: bold;
+  // color: white;
+
+  // border: 2px solid $board_border_color;
+  border-radius: 5px;
+
+  // background-color: $board_color;
 }

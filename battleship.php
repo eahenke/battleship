@@ -8,6 +8,10 @@
 	    <meta name="description" content="" />
 	    <meta name="viewport" content="width=device-width" /> 
 
+	    <!-- fonts -->
+	    <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+	    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+
 	 	<link href="battleship.css" rel="stylesheet" type="text/css" />
 	</head>
 
@@ -20,7 +24,7 @@
 		<div class="board-wrap">
 			<h1>BATTLESHIP</h1>
 			<div class="single-board-wrap">
-				<h2>Human Board</h2>
+				<!-- <h2>Human Board</h2> -->
 				<div class="board human-board">
 				<!-- <p>Player Board</p>
 				<p>AI Board</p> -->
@@ -62,10 +66,11 @@
 			
 					</div>
 				</div>
+				<h2>Human Board</h2>
 			</div> <!--single board wrapper-->
 
 			<div class="single-board-wrap">
-				<h2>AI Board</h2>
+				<!-- <h2>AI Board</h2> -->
 				<div class="board ai-board">
 					
 					<?php
@@ -105,14 +110,15 @@
 			
 					</div>
 				</div>
+				<h2>AI Board</h2>
 			</div><!--single board wrapper-->
-		</div>
+		</div><!--board wrapper-->
 
 		<div class="info-area">
-			<h2>SCOREBOARD</h2>
+			<h2>Enemy ships remaining</h2>
 			<div class="scoreboard">
 				<div class="ships-left">
-					<p>Enemy ships remaining:</p>
+					
 				</div>
 			</div>
 			

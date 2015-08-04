@@ -127,6 +127,7 @@
 .info-area h2 {
   font-size: 1em;
   margin-top: 0.5em;
+  text-transform: uppercase;
   text-align: center;
 }
 
@@ -134,10 +135,12 @@
 .scoreboard {
   height: 300px;
   padding-left: 1em;
-  border: 3px solid #297ACC;
+  border-radius: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
-/* line 12, ../sass/objects/infoarea/_scoreboard.scss */
+/* line 17, ../sass/objects/infoarea/_scoreboard.scss */
 .hitpoint {
   width: 20px;
   height: 15px;
@@ -161,7 +164,9 @@
   margin-top: 0em;
   overflow-y: auto;
   float: right;
-  border: 3px solid #297ACC;
+  font-size: 1em;
+  font-weight: bold;
+  border-radius: 5px;
 }
 
 /* line 7, ../sass/battleship.scss */
@@ -177,9 +182,16 @@ html {
 /* line 15, ../sass/battleship.scss */
 body {
   position: relative;
+  background-color: #D6F5FF;
+  font-family: "Open Sans";
 }
 
-/* line 19, ../sass/battleship.scss */
+/* line 21, ../sass/battleship.scss */
 h1 {
   text-align: center;
+}
+
+/* line 25, ../sass/battleship.scss */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Press Start 2P";
 }
