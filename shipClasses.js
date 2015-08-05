@@ -114,35 +114,16 @@
 
 
 	//FLEET CLASS
-	function Fleet(carriers, battleships, submarines, cruisers, destroyers) {
-		//Default fleet values, can be overridden. If statement needed for passing 0 as legit value.
-		if(carriers !== 0) {
-			this.carriers = carriers || 1;			
-		}
+	function Fleet() {
 
-		if(battleships !== 0) {
-			this.battleships = battleships || 1;
-		}
-
-		if(submarines !== 0) {
-			this.submarines = submarines || 1;			
-		}
-
-		if(cruisers !== 0) {
-			this.cruisers = cruisers || 1;			
-		}
-
-		if(destroyers !== 0) {
-			this.destroyers = destroyers || 1;			
-		}
-
-		this.shipsInFleet = {
-			'Carrier' : this.carriers,
-			'Battleship' : this.battleships,
-			'Submarine' : this.submarines,
-			'Cruiser' : this.cruisers,
-			'Destroyer' : this.destroyers
-		};
+			this.shipsInFleet = {
+				'Carrier' : 0,
+				'Battleship' : 0, 
+				'Submarine' : 0,
+				'Cruiser' : 0,
+				'Destroyer' : 0 
+			};
+		
 		this.activeShips = [];
 		this.totalShips = [];
 	}
@@ -153,12 +134,26 @@
 		constructor: Fleet
 	};
 
+	//REMOVE
 	//Add a new active ship to the fleet, and update totalships property
 	Fleet.prototype.addShip = function(ship) {
 		this.activeShips.push(ship);
 		this.totalShips.push(ship);
-		console.log("added " + ship.shipType);
+		
 	}
+
+	Fleet.prototype.addShips = function() {
+		for(var ship in fleet.shipsInFleet) {
+			var typeOfShip = window[ship];
+			for(var i = 0; i < fleet.shipsInFleet[ship]; i++) {
+				var newShip = new typeOfShip();
+				this.activeShips.push(newShip);
+				this.totalShips.push(newShip);
+			}
+		}
+	}
+
+
 
 	//Remove a ship from activeShips, but keep in totalShips
 	Fleet.prototype.removeShip = function(ship) {
@@ -222,6 +217,8 @@
 	};
 
 	//Sets up new board
+
+	//add rows
 	Board.prototype.initialize = function(player) {
 		var divs = '';
 		for(var i = 0; i < this.rows.length; i++) {
@@ -237,7 +234,7 @@
 				}
 			}
 		}
-		$(this.selector + ' .game-area').append(divs);
+		$(this.selector + ' .playable-area').append(divs);
 	}
 
 
@@ -829,6 +826,7 @@
 
 	//GAME CLASS
 	function Game() {
+		this.gameType;
 		this.turns = 0;
 		this.p1;
 		this.p2;
@@ -990,6 +988,102 @@
 	
 	}
 	
+	Game.prototype.chooseShips = function() {
+		var self = this;
+		var shipCount = 0;
+		var ships = [];
+
+
+		$('.ship-choice').click(function() {
+			if(shipCount < 5) {
+
+				var choice = $(this).text();
+				var li = $('.ship-list li').first();
+
+				while(li.children('p').text() != '') {
+					li = li.next();
+					
+				}
+
+				li.children('p').text(choice);
+				ships.push(choice);
+				shipCount++;
+				
+				if(shipCount >= 5) {
+					$('.ship-choice').toggleClass('inactive');
+					$('.build-fleet button').toggleClass('inactive');
+				}		
+			}
+		});
+	
+
+		$('.remove').click(function() {
+			var text = $(this).siblings('p');
+			if(text.text() != '') {
+				var index = ships.indexOf(text.text());
+				text.text('');
+				shipCount--;
+
+				ships.splice(index, 1);
+				self.shiftShipList();
+
+				if(shipCount < 5) {
+					$('.ship-choice').removeClass('inactive');
+					$('.build-fleet button').addClass('inactive');
+				}
+			}				
+		});
+
+		$('.build-fleet button').click(function() {
+			if(shipCount == 5) {
+				self.buildFleet(ships);
+			}
+		});
+
+	}
+
+	Game.prototype.shiftShipList = function() {
+		var shipsInList = $($('.ship-list li p').get());
+
+		shipsInList.each(function(idx) {
+			var current = $(this);
+			if(current.text() == '') {
+				for(var i = idx; i < shipsInList.length; i++) {
+					//shift text upwards
+					shipsInList.eq(i).text(shipsInList.eq(i + 1).text());
+				}	
+			}
+		});
+	}
+
+	Game.prototype.buildFleet = function(ships) {
+		for(var i = 0; i < ships.length; i++) {
+			var shipType = ships[i];
+			this.p1.fleet.shipsInFleet[shipType]++;
+
+			this.p2.fleet.shipsInFleet[shipType]++;
+		}
+
+		//mostly testing
+		this.p1.board.addShips(this.p1.fleet);
+		this.p2.board.addShips(this.p2.fleet);
+
+
+		console.log(this.p1.fleet.activeShips);
+		console.log(this.p2.fleet.totalShips);
+
+		$('.ship-picker').css('display', 'none');
+		//$('.ship-placer').css('display', 'block');
+
+		placeShips();
+	}
+
+	function placeShips() {
+		var testboard = new Board('placer');
+
+		$('.ship-placer').css('display', 'block');
+	}
+
 
 	function GameLog() {
 		this.gameLog = $('<div>');
@@ -1071,9 +1165,22 @@
 
 
 
+
+
+
+
+
+	
+
+
 	var game = new Game();
 	game.newGame();
+	game.chooseShips();
 	
+
+	//WILL HAVE TO MOVE THIS AND FIX
+	//SCOREBOARD IS NOT WORKING, CALLED BEFORE SHIPS CHOSEN.
+	//GAME LOOP MIGHT HAVE TO BE A CALLBACK IN CHOOSE SHIPS THATS COMES AFTER SHIP CHOOSING AND PLACING
 	var gameLog = new GameLog();
 	gameLog.initialize();
 

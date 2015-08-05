@@ -1,3 +1,83 @@
+/* line 4, ../sass/objects/shippicker/_shippicker.scss */
+.ship-picker {
+  width: 75%;
+  margin: auto;
+}
+
+/* line 13, ../sass/objects/shippicker/_shippicker.scss */
+.ship-list li {
+  height: 1.5em;
+  width: 90%;
+  margin: 0.5em;
+  border-bottom: 2px solid #3399FF;
+  list-style: none;
+}
+/* line 20, ../sass/objects/shippicker/_shippicker.scss */
+.ship-list li p {
+  float: left;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+/* line 27, ../sass/objects/shippicker/_shippicker.scss */
+.ship-list li .remove {
+  display: inline-block;
+  float: right;
+  width: 15px;
+  font-weight: bold;
+  color: red;
+}
+
+/* line 39, ../sass/objects/shippicker/_shippicker.scss */
+p.inactive, button.inactive {
+  background-color: gray;
+}
+
+/* line 44, ../sass/objects/shippicker/_shippicker.scss */
+.ship-choices {
+  width: 100%;
+}
+
+/* line 49, ../sass/objects/shippicker/_shippicker.scss */
+.ship-choice {
+  display: inline-block;
+  width: 125px;
+  height: 50px;
+  padding: 1em;
+  background-color: #3399FF;
+  border-radius: 20px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* line 67, ../sass/objects/shippicker/_shippicker.scss */
+.build-fleet {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+/* line 74, ../sass/objects/shippicker/_shippicker.scss */
+button {
+  width: 200px;
+  height: 75px;
+  font-size: 1.3em;
+  background-color: #297ACC;
+  border: 0 none;
+  border-radius: 20px;
+  text-align: center;
+}
+
+/* line 1, ../sass/objects/shippicker/_shipplacer.scss */
+.ship-placer {
+  display: none;
+}
+/* line 4, ../sass/objects/shippicker/_shipplacer.scss */
+.ship-placer .board {
+  margin-right: auto;
+  margin-left: auto;
+}
+
 /* line 1, ../sass/objects/board/_size.scss */
 .single-board-wrap {
   width: 440px;
@@ -34,7 +114,7 @@
 }
 
 /* line 38, ../sass/objects/board/_size.scss */
-.game-area {
+.playable-area {
   position: absolute;
   top: 40px;
   left: 40px;
@@ -42,19 +122,19 @@
   height: 400px;
 }
 /* line 48, ../sass/objects/board/_size.scss */
-.game-area .tile:first-child {
+.playable-area .tile:first-child {
   border-top-left-radius: 25px;
 }
 /* line 52, ../sass/objects/board/_size.scss */
-.game-area .tile:nth-child(10) {
+.playable-area .tile:nth-child(10) {
   border-top-right-radius: 25px;
 }
 /* line 56, ../sass/objects/board/_size.scss */
-.game-area .tile:nth-child(91) {
+.playable-area .tile:nth-child(91) {
   border-bottom-left-radius: 25px;
 }
 /* line 60, ../sass/objects/board/_size.scss */
-.game-area .tile:nth-child(100) {
+.playable-area .tile:nth-child(100) {
   border-bottom-right-radius: 25px;
 }
 
@@ -93,7 +173,7 @@
 }
 
 /* line 3, ../sass/objects/board/_color.scss */
-.game-area .tile {
+.playable-area .tile {
   background-color: #3399FF;
   border: 2px solid #297ACC;
 }
@@ -115,6 +195,11 @@
 /* line 32, ../sass/objects/board/_color.scss */
 .hit {
   background-color: red;
+}
+
+/* line 5, ../sass/objects/board/_board.scss */
+.game-area {
+  display: none;
 }
 
 /* line 1, ../sass/objects/infoarea/_infoarea.scss */
