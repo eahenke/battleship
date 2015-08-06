@@ -75,7 +75,14 @@
 
 
 				</div>
+			</div><!--board-->
+
+			<div class='ships-to-place'>
+				<h3>Ships to place</h3>
+				<ul>
+				</ul>
 			</div>
+
 		</div>
 
 

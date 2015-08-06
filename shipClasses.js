@@ -5,6 +5,7 @@
 	function Ship(shipType, shipLength) {
 		this.shipType = shipType;
 		this.shipLength = shipLength;
+		this.ID;
 		this.row;
 		this.col;
 		this.direction;
@@ -143,10 +144,16 @@
 	}
 
 	Fleet.prototype.addShips = function() {
-		for(var ship in fleet.shipsInFleet) {
+		var shipCount = 0;
+		for(var ship in this.shipsInFleet) {
 			var typeOfShip = window[ship];
-			for(var i = 0; i < fleet.shipsInFleet[ship]; i++) {
+			console.log(typeOfShip);
+			for(var i = 0; i < this.shipsInFleet[ship]; i++) {
+				
 				var newShip = new typeOfShip();
+				newShip.ID = shipCount;
+				shipCount++;
+
 				this.activeShips.push(newShip);
 				this.totalShips.push(newShip);
 			}
@@ -195,6 +202,7 @@
 			return true;
 		}
 	}
+
 
 
 	//Board Class
@@ -425,7 +433,7 @@
 		this.board = new Board(this.playerType);
 		this.fleet = new Fleet();
 
-		this.board.addShips(this.fleet);
+		//this.board.addShips(this.fleet);
 	}
 	window.Player = Player;
 
@@ -833,6 +841,11 @@
 
 		this.winner;
 		this.loser;
+
+		this.shipPlacer = {
+			'currentShip' : null,
+			'direction' : 'south'
+		};
 	}
 	window.Game = Game;
 
@@ -1060,28 +1073,139 @@
 		for(var i = 0; i < ships.length; i++) {
 			var shipType = ships[i];
 			this.p1.fleet.shipsInFleet[shipType]++;
+			console.log(this.p1.fleet.shipsInFleet[shipType]);
 
 			this.p2.fleet.shipsInFleet[shipType]++;
+
 		}
+			this.p1.fleet.addShips();
 
-		//mostly testing
-		this.p1.board.addShips(this.p1.fleet);
-		this.p2.board.addShips(this.p2.fleet);
+			console.log('shipsinfleet', this.p1.fleet.shipsInFleet);
+			console.log('active', this.p1.fleet.activeShips);
+
+		//this.p1.board.addShips(this.p1.fleet);
+		//this.p2.board.addShips(this.p2.fleet);
 
 
-		console.log(this.p1.fleet.activeShips);
-		console.log(this.p2.fleet.totalShips);
+		
 
 		$('.ship-picker').css('display', 'none');
 		//$('.ship-placer').css('display', 'block');
 
-		placeShips();
+		this.placeShips();
 	}
 
-	function placeShips() {
+	Game.prototype.placeShips = function() {
+		var self = this;
 		var testboard = new Board('placer');
 
+		for(var i = 0; i < this.p1.fleet.activeShips.length; i++) {
+			var ship = this.p1.fleet.activeShips[i];
+			$('<li>').text(ship.shipType).attr('id', ship.ID).appendTo($('.ships-to-place ul'));
+		}
+
+
 		$('.ship-placer').css('display', 'block');
+
+		$('.ships-to-place ul li').click(function() {
+			$('.active').removeClass('active');
+			$(this).addClass('active');
+			var index = $(this).index();
+			self.shipPlacer.currentShip = self.p1.fleet.activeShips[index];
+
+			//console.log(self.shipPlacer.currentShip);
+		});
+
+		$('.placer-board .playable-area .tile').hover(function(){
+
+			if(self.shipPlacer.currentShip) {
+				var coord = $(this).attr('data-coord');
+				self.shipPlacer.currentShip.coord = coord;
+				
+				var possiblePosition = self.getPossibleShipPosition(self.shipPlacer.currentShip, testboard);
+				
+				for(var i = 0; i < possiblePosition.length; i++) {
+					var tile = possiblePosition[i];
+					$('.tile[data-coord=' + tile + ']').addClass('potential');
+				}
+
+				$(this).click(function(){
+					if(self.shipPlacer.currentShip.positions.length == 0) {
+						self.shipPlacer.currentShip.addPosition(possiblePosition);
+						console.log(self.shipPlacer.currentShip);
+					}
+				});
+				
+				
+			}
+		}, function() {
+			$('.potential').removeClass('potential');
+		}
+
+		)
+	}
+
+	Game.prototype.getPossibleShipPosition = function(ship, board) {
+		//console.log(this);
+		var direction = this.shipPlacer.direction;
+		var row = ship.coord.split('-')[0];
+		//console.log(row);
+		var col = ship.coord.split('-')[1];
+
+		var rowNum = letterToNum(row);
+		var shipTiles = [];
+
+		switch(direction) {
+			case('north'):
+				for(var i = 0; i < ship.shipLength; i++) {
+					var possibleCoord = numToLetter(rowNum - i) + '-' + col;
+					//testing
+					//console.log(possibleCoord);
+					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
+						return false;
+					} else {
+						shipTiles.push(possibleCoord);
+					}
+				}
+			break;
+
+			case('east'):
+				for(var i = 0; i < ship.shipLength; i++) {
+					var possibleCoord = row + '-' + (col + i);
+					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
+						return false;
+					} else {
+						shipTiles.push(possibleCoord);
+					}	
+				}
+			break;
+
+			case('south'):
+				for(var i = 0; i < ship.shipLength; i++) {
+					var possibleCoord = numToLetter(rowNum + i) + '-' + col;
+				
+					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
+						return false;
+					} else {
+						shipTiles.push(possibleCoord);
+					}
+				}
+			break;
+
+			case('west'):
+				for(var i = 0; i < ship.shipLength; i++) {
+					var possibleCoord = row + '-' + (col - i);
+					//console.log(possibleCoord);
+					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
+						return false;
+					} else {
+						shipTiles.push(possibleCoord);
+					}	
+				}
+			break;
+		}
+		return shipTiles;			
+	
 	}
 
 
