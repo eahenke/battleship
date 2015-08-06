@@ -83,6 +83,11 @@
 				</ul>
 			</div>
 
+			<div class="clear"></div>
+			<div class="instructions">
+				<p>Use 'WASD' keys to rotate pieces</p>
+			</div>
+
 		</div>
 
 

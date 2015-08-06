@@ -1097,60 +1097,136 @@
 
 	Game.prototype.placeShips = function() {
 		var self = this;
+		var ship = null;
 		var testboard = new Board('placer');
+		var count = 0;
 
+		//CREATE THE SHIP CHOICE BUTTONS
 		for(var i = 0; i < this.p1.fleet.activeShips.length; i++) {
-			var ship = this.p1.fleet.activeShips[i];
-			$('<li>').text(ship.shipType).attr('id', ship.ID).appendTo($('.ships-to-place ul'));
+			var shipChoice = this.p1.fleet.activeShips[i];
+
+			//ID PART POTENTIALLY UNECESSARY?
+			$('<li>').text(shipChoice.shipType).attr('id', shipChoice.ID).appendTo($('.ships-to-place ul'));
 		}
 
-
+		// DISPLAY SECTION
 		$('.ship-placer').css('display', 'block');
 
+		//CLICK BUTTON TO PICK A SHIP TO PLACE
 		$('.ships-to-place ul li').click(function() {
 			$('.active').removeClass('active');
 			$(this).addClass('active');
 			var index = $(this).index();
-			self.shipPlacer.currentShip = self.p1.fleet.activeShips[index];
+			ship = self.shipPlacer.currentShip = self.p1.fleet.activeShips[index];
+			self.shipPlacer.direction = 'south'; //return to default
 
-			//console.log(self.shipPlacer.currentShip);
+
+			// console.log(ship, ship.ID, ship.positions);
 		});
 
 		$('.placer-board .playable-area .tile').hover(function(){
 
-			if(self.shipPlacer.currentShip) {
+			
+			if(self.canPlace()) {
+				
 				var coord = $(this).attr('data-coord');
-				self.shipPlacer.currentShip.coord = coord;
+				ship.coord = coord;
 				
-				var possiblePosition = self.getPossibleShipPosition(self.shipPlacer.currentShip, testboard);
+				var possiblePosition = self.getPossibleShipPosition(ship, testboard);
 				
+				//PAINT POTENTIAL SPOTS
 				for(var i = 0; i < possiblePosition.length; i++) {
 					var tile = possiblePosition[i];
 					$('.tile[data-coord=' + tile + ']').addClass('potential');
 				}
 
+
+				//PLACE SHIP
+
+				// DOUBLE CLICKING IS A PROBLEM SOMETIMES - NOT SURE WHY IT DELETES THE SHIP SPACES SOMETIMES.
+
 				$(this).click(function(){
-					if(self.shipPlacer.currentShip.positions.length == 0) {
-						self.shipPlacer.currentShip.addPosition(possiblePosition);
-						console.log(self.shipPlacer.currentShip);
+					// console.log('click', ship);
+					// if(ship != null && ship.positions.length == 0 && possiblePosition) {
+					if(self.canPlace() && possiblePosition) {
+						ship.addPosition(possiblePosition);
+						testboard.removeSpace('available', possiblePosition);
+						
+						//PAINT PLACED SHIP
+						for(var i = 0; i < possiblePosition.length; i++) {
+							var tile = possiblePosition[i];
+							$('.tile[data-coord=' + tile + ']').addClass('placed');
+						}
+
+						//inactivate button
+						$('.ships-to-place ul li').eq(ship.ID).removeClass('active').addClass('inactive');
+						ship = null;
+
 					}
 				});
+
+
+
+				// ROTATE SHIPS
+				$(document).keydown(function(event) {
+					
+					if(ship && (event.which == 87 || event.which == 65 || 
+						event.which == 83 || event.which == 68 )) {
+
+						if(event.which == 87) {
+							self.shipPlacer.direction = 'north';
+							
+						} else if(event.which == 65) {
+							self.shipPlacer.direction = 'west';
+
+						} else if(event.which == 83) {
+							self.shipPlacer.direction = 'south';
+
+						} else if(event.which == 68) {
+							self.shipPlacer.direction = 'east';
+						}
+
+						//CLEAR POTENTIAL AND GET NEW POTENTIAL POSITIONS W/ NEW DIRECTION
+						$('.potential').removeClass('potential');
+						possiblePosition = self.getPossibleShipPosition(ship, testboard);
+
+						//PAINT POTENTIAL SHIPS
+						for(var i = 0; i < possiblePosition.length; i++) {
+							var tile = possiblePosition[i];
+							$('.tile[data-coord=' + tile + ']').addClass('potential');
+						}
+					}	
+				});
+				
 				
 				
 			}
 		}, function() {
 			$('.potential').removeClass('potential');
-		}
+		});
 
-		)
+
 	}
 
+	// CHECKS IF THERES A CURRENT SHIP THAT HAS NOT BEEN PLACED
+	Game.prototype.canPlace = function() {
+		var self = this;
+		var ship = self.shipPlacer.currentShip;
+
+		if(ship && !ship.positions.length) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// GETS POTENTIAL POSITIONS BASED ON LOCATION AND LENGTH
 	Game.prototype.getPossibleShipPosition = function(ship, board) {
 		//console.log(this);
 		var direction = this.shipPlacer.direction;
 		var row = ship.coord.split('-')[0];
 		//console.log(row);
-		var col = ship.coord.split('-')[1];
+		var col = parseInt(ship.coord.split('-')[1]);
 
 		var rowNum = letterToNum(row);
 		var shipTiles = [];
@@ -1171,17 +1247,20 @@
 
 			case('east'):
 				for(var i = 0; i < ship.shipLength; i++) {
+					
 					var possibleCoord = row + '-' + (col + i);
+					
 					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
 						return false;
 					} else {
 						shipTiles.push(possibleCoord);
 					}	
-				}
+				}				
 			break;
 
 			case('south'):
 				for(var i = 0; i < ship.shipLength; i++) {
+					
 					var possibleCoord = numToLetter(rowNum + i) + '-' + col;
 				
 					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {

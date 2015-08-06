@@ -81,18 +81,22 @@ button {
 .ship-placer .board .potential {
   background-color: red;
 }
+/* line 13, ../sass/objects/shippicker/_shipplacer.scss */
+.ship-placer .board .placed {
+  background-color: red;
+}
 
-/* line 15, ../sass/objects/shippicker/_shipplacer.scss */
+/* line 19, ../sass/objects/shippicker/_shipplacer.scss */
 .ships-to-place {
   float: right;
   display: inline-block;
   width: 250px;
 }
-/* line 20, ../sass/objects/shippicker/_shipplacer.scss */
+/* line 24, ../sass/objects/shippicker/_shipplacer.scss */
 .ships-to-place ul {
   list-style: none;
 }
-/* line 23, ../sass/objects/shippicker/_shipplacer.scss */
+/* line 27, ../sass/objects/shippicker/_shipplacer.scss */
 .ships-to-place ul li {
   width: 150px;
   height: 50px;
@@ -101,9 +105,13 @@ button {
   text-align: center;
   vertical-align: middle;
 }
-/* line 31, ../sass/objects/shippicker/_shipplacer.scss */
+/* line 35, ../sass/objects/shippicker/_shipplacer.scss */
 .ships-to-place ul li.active {
   background-color: green;
+}
+/* line 39, ../sass/objects/shippicker/_shipplacer.scss */
+.ships-to-place ul li.inactive {
+  background-color: gray;
 }
 
 /* line 1, ../sass/objects/board/_size.scss */
