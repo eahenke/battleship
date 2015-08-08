@@ -19,12 +19,26 @@
 		constructor: Ship
 	};
 
+	Ship.prototype.initialize = function(row, col, dir) {
+		this.row = row;
+		this.col = col;
+		this.direction = 'south'; //default
+		this.coord;
+	};
+
 	Ship.prototype.getCoord = function() {
 		return this.row + '-' + this.col;		
 	};
 
+	Ship.prototype.setCoord = function(coord) {
+		this.coord = coord;
+		this.row = coord.split('-')[0];		
+		this.col = parseInt(coord.split('-')[1]);
+	}
+
 	//Add tile coordinate or array of coordinates to ship's position property
 	Ship.prototype.addPosition = function(coords) {
+		console.log('add position', coords);
 		if(coords.constructor === String) {
 			this.positions.push(coords);
 			//console.log('string');			
@@ -59,12 +73,6 @@
 	};
 
 
-	Ship.prototype.initialize = function(row, col, dir) {
-		this.row = row;
-		this.col = col;
-		this.direction = dir;
-		this.coord = this.getCoord();
-	};
 
 
 
@@ -224,6 +232,76 @@
 		constructor: Board
 	};
 
+
+	// GETS POTENTIAL POSITIONS BASED ON LOCATION AND LENGTH
+	Board.prototype.getPossibleShipPosition = function(ship) {
+		//var direction = this.shipPlacer.direction;
+		var direction = ship.direction;
+		console.log('current ship length: ' + ship.shipLength);
+		//var row = ship.coord.split('-')[0];
+		var row = ship.row;
+		var col = ship.col;
+		//var col = parseInt(ship.coord.split('-')[1]);
+
+		var rowNum = letterToNum(row);
+		var shipTiles = [];
+
+		switch(direction) {
+			case('north'):
+				for(var i = 0; i < ship.shipLength; i++) {
+					var possibleCoord = numToLetter(rowNum - i) + '-' + col;
+					//testing
+					//console.log(possibleCoord);
+					if( this.availableSpaces.indexOf(possibleCoord) === -1 ) {
+						return false;
+					} else {
+						shipTiles.push(possibleCoord);
+					}
+				}
+			break;
+
+			case('east'):
+				for(var i = 0; i < ship.shipLength; i++) {
+					
+					var possibleCoord = row + '-' + (col + i);
+					
+					if( this.availableSpaces.indexOf(possibleCoord) === -1 ) {
+						return false;
+					} else {
+						shipTiles.push(possibleCoord);
+					}	
+				}				
+			break;
+
+			case('south'):
+				for(var i = 0; i < ship.shipLength; i++) {
+					
+					var possibleCoord = numToLetter(rowNum + i) + '-' + col;
+				
+					if( this.availableSpaces.indexOf(possibleCoord) === -1 ) {
+						return false;
+					} else {
+						shipTiles.push(possibleCoord);
+					}
+				}
+			break;
+
+			case('west'):
+				for(var i = 0; i < ship.shipLength; i++) {
+					var possibleCoord = row + '-' + (col - i);
+					//console.log(possibleCoord);
+					if( this.availableSpaces.indexOf(possibleCoord) === -1 ) {
+						return false;
+					} else {
+						shipTiles.push(possibleCoord);
+					}	
+				}
+			break;
+		}
+		return shipTiles;			
+	
+	}
+
 	//Sets up new board
 
 	//add rows
@@ -273,6 +351,7 @@
 		}
 	}
 
+	//erase or fold into the new version above
 	//For a new ship, gives a random location, and checks if space available on board.
 	//If so, returns array of tiles occupied by ship
 	Board.prototype.checkSpaces = function(ship) {
@@ -362,6 +441,43 @@
 		}
 	}
 
+
+	Board.prototype.addRandomShips = function(fleet) {
+		
+		for(var i = 0; i < fleet.activeShips; i++) {		
+			var ship = fleet.activeShips[i];
+
+			var row = getRandom(this.rows);
+			var col = getRandom(this.cols);
+			var dir = getRandom(this.directions);
+
+			var coord = row + '-' + col;
+
+			ship.setCoord(coord);
+
+
+			
+			var positions = this.getPossibleShipPosition(ship);
+
+			//if false, rerun until true
+			while(! positions) {
+				var row = getRandom(this.rows);
+				var col = getRandom(this.cols);
+				var dir = getRandom(this.directions);
+				
+				positions = this.getPossibleShipPosition(ship);
+			}
+
+			ship.addPosition(positions);
+			this.drawShips(positions, 'ship' + ship.shipType);
+		}
+	}
+
+
+
+
+	//Remove at some point with better function
+	//V V V V V V V V V V V V V V V V V V V V V
 	//Adds ship to fleet, and adds ship class to appropriate board tiles.
 	Board.prototype.drawShip = function(ship, fleet) {
 		fleet.addShip(ship);
@@ -370,6 +486,15 @@
 			var tile = ship.positions[i];
 			$(this.selector + ' .tile[data-coord="' + tile + '"]').addClass('ship ' + ship.shipType);
 		}
+	}
+
+	//Add ship to a board with given positions
+	Board.prototype.drawShips = function(positions, className) {
+		
+		for(var i = 0; i < positions.length; i++) {
+			var tile = positions[i];
+			$(this.selector + ' .tile[data-coord=' + tile + ']').addClass(className);
+		}		
 	}
 
 	//Check hit vs miss.
@@ -844,7 +969,6 @@
 
 		this.shipPlacer = {
 			'currentShip' : null,
-			'direction' : 'south'
 		};
 	}
 	window.Game = Game;
@@ -1078,19 +1202,13 @@
 			this.p2.fleet.shipsInFleet[shipType]++;
 
 		}
-			this.p1.fleet.addShips();
+		this.p1.fleet.addShips();
+		this.p2.fleet.addShips();
 
-			console.log('shipsinfleet', this.p1.fleet.shipsInFleet);
-			console.log('active', this.p1.fleet.activeShips);
-
-		//this.p1.board.addShips(this.p1.fleet);
-		//this.p2.board.addShips(this.p2.fleet);
-
-
-		
+		//console.log('shipsinfleet', this.p1.fleet.shipsInFleet);
+		//console.log('active', this.p1.fleet.activeShips);		
 
 		$('.ship-picker').css('display', 'none');
-		//$('.ship-placer').css('display', 'block');
 
 		this.placeShips();
 	}
@@ -1098,7 +1216,7 @@
 	Game.prototype.placeShips = function() {
 		var self = this;
 		var ship = null;
-		var testboard = new Board('placer');
+		var placerBoard = new Board('placer');
 		var count = 0;
 
 		//CREATE THE SHIP CHOICE BUTTONS
@@ -1117,11 +1235,10 @@
 			$('.active').removeClass('active');
 			$(this).addClass('active');
 			var index = $(this).index();
-			ship = self.shipPlacer.currentShip = self.p1.fleet.activeShips[index];
-			self.shipPlacer.direction = 'south'; //return to default
-
-
-			// console.log(ship, ship.ID, ship.positions);
+			ship = self.p1.fleet.activeShips[index];
+			self.shipPlacer.currentShip = self.p1.fleet.activeShips[index];
+			//console.log(ship);
+			//console.log(self.canPlace());
 		});
 
 		$('.placer-board .playable-area .tile').hover(function(){
@@ -1130,15 +1247,14 @@
 			if(self.canPlace()) {
 				
 				var coord = $(this).attr('data-coord');
-				ship.coord = coord;
+				ship.setCoord(coord);
 				
-				var possiblePosition = self.getPossibleShipPosition(ship, testboard);
+				var possiblePosition = placerBoard.getPossibleShipPosition(ship);
+				//console.log('current possible positions', possiblePosition);
+				
 				
 				//PAINT POTENTIAL SPOTS
-				for(var i = 0; i < possiblePosition.length; i++) {
-					var tile = possiblePosition[i];
-					$('.tile[data-coord=' + tile + ']').addClass('potential');
-				}
+				placerBoard.drawShips(possiblePosition, 'potential');
 
 
 				//PLACE SHIP
@@ -1146,28 +1262,31 @@
 				// DOUBLE CLICKING IS A PROBLEM SOMETIMES - NOT SURE WHY IT DELETES THE SHIP SPACES SOMETIMES.
 
 				$(this).click(function(){
-					// console.log('click', ship);
-					// if(ship != null && ship.positions.length == 0 && possiblePosition) {
-					if(self.canPlace() && possiblePosition) {
-						ship.addPosition(possiblePosition);
-						testboard.removeSpace('available', possiblePosition);
+					//console.log('current ship', ship);
+
+					if(self.canPlace()) {
+						possiblePosition = placerBoard.getPossibleShipPosition(ship);
 						
-						//PAINT PLACED SHIP
-						for(var i = 0; i < possiblePosition.length; i++) {
-							var tile = possiblePosition[i];
-							$('.tile[data-coord=' + tile + ']').addClass('placed');
+					
+						if(possiblePosition) {
+							ship.addPosition(possiblePosition);
+							placerBoard.removeSpace('available', possiblePosition);
+							
+							//PAINT PLACED SHIP
+							placerBoard.drawShips(ship.positions, 'placed');
+
+							//inactivate button
+							$('.ships-to-place ul li').eq(ship.ID).removeClass('active').addClass('inactive');
+							console.log(ship);
+							ship = null;
 						}
-
-						//inactivate button
-						$('.ships-to-place ul li').eq(ship.ID).removeClass('active').addClass('inactive');
-						ship = null;
-
 					}
 				});
 
 
 
 				// ROTATE SHIPS
+				//clean up once you redo the random ship placement function
 				$(document).keydown(function(event) {
 					
 					if(ship && (event.which == 87 || event.which == 65 || 
@@ -1175,26 +1294,28 @@
 
 						if(event.which == 87) {
 							self.shipPlacer.direction = 'north';
+							ship.direction = 'north';
 							
 						} else if(event.which == 65) {
 							self.shipPlacer.direction = 'west';
+							ship.direction = 'west';
 
 						} else if(event.which == 83) {
 							self.shipPlacer.direction = 'south';
+							ship.direction = 'south';
 
 						} else if(event.which == 68) {
 							self.shipPlacer.direction = 'east';
+							ship.direction = 'east';							
+
 						}
 
 						//CLEAR POTENTIAL AND GET NEW POTENTIAL POSITIONS W/ NEW DIRECTION
 						$('.potential').removeClass('potential');
-						possiblePosition = self.getPossibleShipPosition(ship, testboard);
+						
+						possiblePosition = placerBoard.getPossibleShipPosition(ship);
 
-						//PAINT POTENTIAL SHIPS
-						for(var i = 0; i < possiblePosition.length; i++) {
-							var tile = possiblePosition[i];
-							$('.tile[data-coord=' + tile + ']').addClass('potential');
-						}
+						placerBoard.drawShips(possiblePosition, 'potential');
 					}	
 				});
 				
@@ -1220,72 +1341,6 @@
 		}
 	}
 
-	// GETS POTENTIAL POSITIONS BASED ON LOCATION AND LENGTH
-	Game.prototype.getPossibleShipPosition = function(ship, board) {
-		//console.log(this);
-		var direction = this.shipPlacer.direction;
-		var row = ship.coord.split('-')[0];
-		//console.log(row);
-		var col = parseInt(ship.coord.split('-')[1]);
-
-		var rowNum = letterToNum(row);
-		var shipTiles = [];
-
-		switch(direction) {
-			case('north'):
-				for(var i = 0; i < ship.shipLength; i++) {
-					var possibleCoord = numToLetter(rowNum - i) + '-' + col;
-					//testing
-					//console.log(possibleCoord);
-					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
-						return false;
-					} else {
-						shipTiles.push(possibleCoord);
-					}
-				}
-			break;
-
-			case('east'):
-				for(var i = 0; i < ship.shipLength; i++) {
-					
-					var possibleCoord = row + '-' + (col + i);
-					
-					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
-						return false;
-					} else {
-						shipTiles.push(possibleCoord);
-					}	
-				}				
-			break;
-
-			case('south'):
-				for(var i = 0; i < ship.shipLength; i++) {
-					
-					var possibleCoord = numToLetter(rowNum + i) + '-' + col;
-				
-					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
-						return false;
-					} else {
-						shipTiles.push(possibleCoord);
-					}
-				}
-			break;
-
-			case('west'):
-				for(var i = 0; i < ship.shipLength; i++) {
-					var possibleCoord = row + '-' + (col - i);
-					//console.log(possibleCoord);
-					if( board.availableSpaces.indexOf(possibleCoord) === -1 ) {
-						return false;
-					} else {
-						shipTiles.push(possibleCoord);
-					}	
-				}
-			break;
-		}
-		return shipTiles;			
-	
-	}
 
 
 	function GameLog() {

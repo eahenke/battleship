@@ -88,6 +88,8 @@
 				<p>Use 'WASD' keys to rotate pieces</p>
 			</div>
 
+			<button class="start-game">Start game</button>
+
 		</div>
 
 
