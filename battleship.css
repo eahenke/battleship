@@ -1,10 +1,11 @@
 /* line 4, ../sass/objects/shippicker/_shippicker.scss */
 .ship-picker {
+  display: none;
   width: 75%;
   margin: auto;
 }
 
-/* line 13, ../sass/objects/shippicker/_shippicker.scss */
+/* line 14, ../sass/objects/shippicker/_shippicker.scss */
 .ship-list li {
   height: 1.5em;
   width: 90%;
@@ -12,14 +13,14 @@
   border-bottom: 2px solid #3399FF;
   list-style: none;
 }
-/* line 20, ../sass/objects/shippicker/_shippicker.scss */
+/* line 21, ../sass/objects/shippicker/_shippicker.scss */
 .ship-list li p {
   float: left;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
 }
-/* line 27, ../sass/objects/shippicker/_shippicker.scss */
+/* line 28, ../sass/objects/shippicker/_shippicker.scss */
 .ship-list li .remove {
   display: inline-block;
   float: right;
@@ -28,17 +29,17 @@
   color: red;
 }
 
-/* line 39, ../sass/objects/shippicker/_shippicker.scss */
+/* line 40, ../sass/objects/shippicker/_shippicker.scss */
 p.inactive, button.inactive {
   background-color: gray;
 }
 
-/* line 44, ../sass/objects/shippicker/_shippicker.scss */
+/* line 45, ../sass/objects/shippicker/_shippicker.scss */
 .ship-choices {
   width: 100%;
 }
 
-/* line 49, ../sass/objects/shippicker/_shippicker.scss */
+/* line 50, ../sass/objects/shippicker/_shippicker.scss */
 .ship-choice {
   display: inline-block;
   width: 125px;
@@ -50,14 +51,14 @@ p.inactive, button.inactive {
   vertical-align: middle;
 }
 
-/* line 67, ../sass/objects/shippicker/_shippicker.scss */
-.build-fleet {
+/* line 68, ../sass/objects/shippicker/_shippicker.scss */
+.build-fleet, .button-wrapper {
   margin-right: auto;
   margin-left: auto;
   text-align: center;
 }
 
-/* line 74, ../sass/objects/shippicker/_shippicker.scss */
+/* line 75, ../sass/objects/shippicker/_shippicker.scss */
 button {
   width: 200px;
   height: 75px;

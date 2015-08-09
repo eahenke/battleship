@@ -21,6 +21,14 @@
 
 		<!-- To center title relative to boards, put in boardwrap, then change info-area margin-top -->
 
+		<div class="game-types">
+			<h2>Choose a game type</h2>
+			<div class='button-wrapper'>
+				<button class="random">Random</button>
+				<button class="custom">Custom</button>
+			</div>
+		</div>
+
 		<div class='ship-picker'>
 			<h2>Pick 5 Ships</h2>
 			<h3>Selected ships</h3>
@@ -88,7 +96,9 @@
 				<p>Use 'WASD' keys to rotate pieces</p>
 			</div>
 
-			<button class="start-game">Start game</button>
+			<div class='button-wrapper'>
+				<button class="start inactive">Start game</button>
+			</div>
 
 		</div>
 
