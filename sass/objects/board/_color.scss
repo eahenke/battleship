@@ -33,4 +33,9 @@
   background-color: red;
 }
 
+.ai-board .ship.end:not(.hit) {
+  background-color: $ship_color;
+  transition: background-color 1.0s ease;
 
+
+}

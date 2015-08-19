@@ -234,6 +234,12 @@ button {
   background-color: red;
 }
 
+/* line 36, ../sass/objects/board/_color.scss */
+.ai-board .ship.end:not(.hit) {
+  background-color: gray;
+  transition: background-color 1.0s ease;
+}
+
 /* line 5, ../sass/objects/board/_board.scss */
 .game-area {
   display: none;
