@@ -1,3 +1,120 @@
+/* line 4, ../sass/objects/shippicker/_shippicker.scss */
+.ship-picker {
+  display: none;
+  width: 75%;
+  margin: auto;
+}
+
+/* line 14, ../sass/objects/shippicker/_shippicker.scss */
+.ship-list li {
+  height: 1.5em;
+  width: 90%;
+  margin: 0.5em;
+  border-bottom: 2px solid #3399FF;
+  list-style: none;
+}
+/* line 21, ../sass/objects/shippicker/_shippicker.scss */
+.ship-list li p {
+  float: left;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+/* line 28, ../sass/objects/shippicker/_shippicker.scss */
+.ship-list li .remove {
+  display: inline-block;
+  float: right;
+  width: 15px;
+  font-weight: bold;
+  color: red;
+}
+
+/* line 40, ../sass/objects/shippicker/_shippicker.scss */
+p.inactive, button.inactive {
+  background-color: gray;
+}
+
+/* line 45, ../sass/objects/shippicker/_shippicker.scss */
+.ship-choices {
+  width: 100%;
+}
+
+/* line 50, ../sass/objects/shippicker/_shippicker.scss */
+.ship-choice {
+  display: inline-block;
+  width: 125px;
+  height: 50px;
+  padding: 1em;
+  background-color: #3399FF;
+  border-radius: 20px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* line 68, ../sass/objects/shippicker/_shippicker.scss */
+.build-fleet, .button-wrapper {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+/* line 75, ../sass/objects/shippicker/_shippicker.scss */
+button {
+  width: 200px;
+  height: 75px;
+  font-size: 1.3em;
+  background-color: #297ACC;
+  border: 0 none;
+  border-radius: 20px;
+  text-align: center;
+}
+
+/* line 1, ../sass/objects/shippicker/_shipplacer.scss */
+.ship-placer {
+  display: none;
+}
+/* line 4, ../sass/objects/shippicker/_shipplacer.scss */
+.ship-placer .board {
+  display: inline-block;
+  margin-left: 440px;
+}
+/* line 9, ../sass/objects/shippicker/_shipplacer.scss */
+.ship-placer .board .potential {
+  background-color: red;
+}
+/* line 13, ../sass/objects/shippicker/_shipplacer.scss */
+.ship-placer .board .placed {
+  background-color: red;
+}
+
+/* line 19, ../sass/objects/shippicker/_shipplacer.scss */
+.ships-to-place {
+  float: right;
+  display: inline-block;
+  width: 250px;
+}
+/* line 24, ../sass/objects/shippicker/_shipplacer.scss */
+.ships-to-place ul {
+  list-style: none;
+}
+/* line 27, ../sass/objects/shippicker/_shipplacer.scss */
+.ships-to-place ul li {
+  width: 150px;
+  height: 50px;
+  margin-bottom: 1.5em;
+  background-color: #3399FF;
+  text-align: center;
+  vertical-align: middle;
+}
+/* line 35, ../sass/objects/shippicker/_shipplacer.scss */
+.ships-to-place ul li.active {
+  background-color: green;
+}
+/* line 39, ../sass/objects/shippicker/_shipplacer.scss */
+.ships-to-place ul li.inactive {
+  background-color: gray;
+}
+
 /* line 1, ../sass/objects/board/_size.scss */
 .single-board-wrap {
   width: 440px;
@@ -34,7 +151,7 @@
 }
 
 /* line 38, ../sass/objects/board/_size.scss */
-.game-area {
+.playable-area {
   position: absolute;
   top: 40px;
   left: 40px;
@@ -42,19 +159,19 @@
   height: 400px;
 }
 /* line 48, ../sass/objects/board/_size.scss */
-.game-area .tile:first-child {
+.playable-area .tile:first-child {
   border-top-left-radius: 25px;
 }
 /* line 52, ../sass/objects/board/_size.scss */
-.game-area .tile:nth-child(10) {
+.playable-area .tile:nth-child(10) {
   border-top-right-radius: 25px;
 }
 /* line 56, ../sass/objects/board/_size.scss */
-.game-area .tile:nth-child(91) {
+.playable-area .tile:nth-child(91) {
   border-bottom-left-radius: 25px;
 }
 /* line 60, ../sass/objects/board/_size.scss */
-.game-area .tile:nth-child(100) {
+.playable-area .tile:nth-child(100) {
   border-bottom-right-radius: 25px;
 }
 
@@ -93,7 +210,7 @@
 }
 
 /* line 3, ../sass/objects/board/_color.scss */
-.game-area .tile {
+.playable-area .tile {
   background-color: #3399FF;
   border: 2px solid #297ACC;
 }
@@ -117,13 +234,20 @@
   background-color: red;
 }
 
+/* line 5, ../sass/objects/board/_board.scss */
+.game-area {
+  display: none;
+}
+
 /* line 1, ../sass/objects/infoarea/_infoarea.scss */
 .info-area {
-  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 250px;
   margin-top: 0em;
 }
-/* line 8, ../sass/objects/infoarea/_infoarea.scss */
+/* line 12, ../sass/objects/infoarea/_infoarea.scss */
 .info-area h2 {
   font-size: 1em;
   margin-top: 0.5em;
@@ -213,9 +337,10 @@ body {
 /* line 21, ../sass/battleship.scss */
 h1 {
   text-align: center;
+  margin-bottom: 1em;
 }
 
-/* line 25, ../sass/battleship.scss */
+/* line 26, ../sass/battleship.scss */
 h1, h2, h3, h4, h5, h6 {
   font-family: "Press Start 2P";
 }
