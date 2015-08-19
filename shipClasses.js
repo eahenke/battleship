@@ -940,11 +940,22 @@
 
 	//Ends game and displays winner/loser message
 	Game.prototype.endGame = function() {
-		var endMsg = '<p>' + this.loser + ' has lost all ships! ' + this.winner + ' wins!</p>';
-		$('.board-wrap').empty();
-		$('.board-wrap').html(endMsg);
+		var self = this;
 
-		this.gameStats();
+		$('.ai-board .ship').addClass('end');
+
+		
+		setTimeout(function(){
+			var endMsg = '<p>' + self.loser + ' has lost all ships! ' + self.winner + ' wins!</p>';
+			
+			$('.board-wrap').empty();
+			$('.board-wrap').html(endMsg);
+
+			self.gameStats();
+			
+		}, 1250);
+	
+
 	}
 
 	//Displays stats after game
