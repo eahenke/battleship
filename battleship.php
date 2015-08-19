@@ -17,14 +17,14 @@
 
 	<body>
 
-		<!-- <h1>BATTLESHIP</h1> -->
+		<h1>BATTLESHIP</h1>
 
 		<!-- To center title relative to boards, put in boardwrap, then change info-area margin-top -->
 
 		<div class="game-types">
 			<h2>Choose a game type</h2>
 			<div class='button-wrapper'>
-				<button class="random">Random</button>
+				<button class="standard">Standard</button>
 				<button class="custom">Custom</button>
 			</div>
 		</div>
@@ -106,7 +106,7 @@
 
 		<div class="game-area">
 			<div class="board-wrap">
-				<h1>BATTLESHIP</h1>
+				<!-- <h1>BATTLESHIP</h1> -->
 				<div class="single-board-wrap">
 					<!-- <h2>Human Board</h2> -->
 					<div class="board human-board">
