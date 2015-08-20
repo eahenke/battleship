@@ -500,7 +500,7 @@
 	//Resets turn info, call at start of each turn
 	Player.prototype.resetTurnInfo = function() {
 		for(var prop in this.turnInfo) {
-			prop = null;
+			this.turnInfo[prop] = null;
 		}
 	}
 
@@ -575,10 +575,9 @@
 
 
 	//Human Subclass
-	function Human(gamelog) {
+	function Human() {
 		Player.call(this, 'human');
 		this.turn = true;
-		this.gamelog = gamelog;
 	}
 	window.Human = Human;
 	Human.prototype = Object.create(Player.prototype);
@@ -588,15 +587,11 @@
 	
 	//Checks hit/miss status of human guess.
 	Human.prototype.guess = function(tileObj) {
-		//console.log(this);
-		//console.log(this.board.availableSpaces);
 		var self = this;
-		console.log(self);
 
 		self.resetTurnInfo();
 
 		var tile = tileObj.attr('data-coord');
-
 
 		if(!tileObj.hasClass('hit') && !tileObj.hasClass('miss')) {
 			
@@ -613,16 +608,9 @@
 				self.turnInfo.result = 'hit';
 				self.turnInfo.ship = ship;
 				self.turnInfo.message = ship.hitMessage();
-
-
-				//this.gamelog.output(ship.hitMessage());
 				
 				//Player stats
 				this.updateStats('hit');
-
-
-				//SCOREBOARD - FIX NEXT - COULD ALSO USE TURNINFO
-				//scoreboard.update(ship);
 
 				this.enemy.fleet.checkSink(ship);
 				
@@ -632,24 +620,17 @@
 				//this.gamelog.output('Miss!');
 				self.turnInfo.result = 'miss';
 				self.turnInfo.message = 'Miss!';
-
 				
 				self.updateStats('miss');
 
 			}
-			
-			console.log(tile);
 			board.removeSpace('guessable', tile);
 		}
-
 	}
 
-
 	//AI Subclass
-	function AI(gamelog) {
+	function AI() {
 		Player.call(this, 'ai');
-
-		this.gamelog = gamelog;
 		
 		this.guessInfo = {
 			"firstTileHit" : null,
@@ -671,25 +652,19 @@
 		var board = this.enemy.board;
 		var self = this;
 
-		console.log(this);
 		this.resetTurnInfo();
 
 		//no target
 		if(this.guessInfo['targetShip'] == null) {
 
-			//console.log('known ships');
-			//console.log(this.guessInfo['knownShips']);
-
 			var tile = this.findATarget();
 
 		} else { //has target
-			//console.log('has target');
+			
 			var tile = this.getTile();
 		}
 
 		var tileObj = this.objectify(tile);
-		//console.log(tile);
-
 			
 		if(board.checkHit(tileObj)) { //hit
 			//board stuff
@@ -702,10 +677,6 @@
 			self.turnInfo.result = 'hit';
 			self.turnInfo.ship = ship;
 			self.turnInfo.message = ship.hitMessage();
-
-
-
-			//this.gamelog.output(ship.hitMessage());
 			
 			// Player stats
 			this.updateStats('hit');
@@ -714,7 +685,6 @@
 
 		} else { //miss
 			board.miss(tileObj);
-			//this.gamelog.output('Miss!');
 
 			this.turnInfo.result = 'miss';
 			this.turnInfo.message = 'Miss!';
@@ -746,7 +716,6 @@
 				neighbors.push(targ);
 			}
 		}
-		//console.log('neighbors: ' , neighbors);		
 		return neighbors;
 
 
@@ -768,8 +737,6 @@
 		if(this.guessInfo['targetShip'] && ship != this.guessInfo['targetShip'] ) {
 			
 			this.guessInfo['knownShips'].push(tile);
-			//console.log('known ships added: ');
-			//console.log(this.guessInfo['knownShips']);
 
 			//check its sink status anyway
 			if(this.enemy.fleet.checkSink(ship)) {
@@ -804,7 +771,6 @@
 	AI.prototype.getTile = function() {
 		var tile = this.educatedGuess();
 		if(! tile) {
-			//console.log('out of bounds');
 			tile = this.educatedGuess(this.guessInfo['firstTileHit']);
 		}
 
@@ -847,7 +813,7 @@
 		for(var i = 0; i < ship.positions.length; i++) {
 			var shipTile = ship.positions[i];
 			if(this.guessInfo['knownShips'].indexOf(shipTile) > -1) {				
-				//console.log('REMOVING FROM KNOWN SHIPS: ' + shipTile);
+				
 				var index = this.guessInfo['knownShips'].indexOf(shipTile);
 				this.guessInfo['knownShips'].splice(index, 1);
 			}
@@ -882,7 +848,7 @@
 			orient = 'horizontal';
 		} else if (col1 == col2) {
 			orient = 'vertical'
-		} else {
+		} else { //testing - delete
 			//console.log('bad input!');
 		}
 
@@ -922,7 +888,6 @@
 		} else if(orient == 'horizontal') {
 			possibleTargets = [east, west];			
 		}
-		//console.log(possibleTargets);
 
 		//Cull targets to possible tiles
 		for(var i = 0; i < possibleTargets.length; i++) {
@@ -931,8 +896,6 @@
 				targetList.push(targ);
 			}
 		}
-		//console.log(this.enemy.board.guessableSpaces);
-		//console.log(targetList);
 		var target = getRandom(targetList);
 		return target;
 	}
@@ -948,9 +911,8 @@
 		this.winner;
 		this.loser;
 
-		this.gamelog = new GameLog();
-		//console.log(this.gamelog);
-
+		this.gamelog;
+		this.scoreboard;
 
 		this.shipPlacer = {
 			'currentShip' : null,
@@ -966,18 +928,12 @@
 	//Sets up new game
 	Game.prototype.initialize = function() {
 		var self = this;
-		this.gamelog.initialize();
 
 		this.p1 = new Human();
 		this.p2 = new AI();
-
 		this.players = [this.p1, this.p2];
-
 		this.assignEnemy(this.p1, this.p2);
-
 		this.turns = 0;
-
-
 
 		//Game choice
 		$('button.custom').click(function() {
@@ -987,6 +943,15 @@
 		$('button.standard').click(function() {
 			self.standardGame();
 		});
+	}
+
+	//Initializes scoreboard and gamelog
+	Game.prototype.setUpInfoArea = function() {
+		this.gamelog = new GameLog();
+		this.scoreboard = new Scoreboard(this.p2.fleet);
+
+		this.gamelog.initialize();
+		this.scoreboard.initialize();		
 	}
 
 	//Assigns each player an enemy so they may see opponents board, check fleet status, etc
@@ -1024,7 +989,7 @@
 			//var endMsg = '<p>' + self.loser + ' has lost all ships! ' + self.winner + ' wins!</p>';
 			
 			$('.board-wrap').empty();
-			$('.board-wrap').html(endMsg);
+			// $('.board-wrap').html(endMsg);
 
 			self.gameStats();
 		});
@@ -1076,6 +1041,8 @@
 		var self = this;
 		console.log(self.turns);
 
+		self.setUpInfoArea();
+
 		//Assign click event to all guessable spaces.
 		for(var i = 0; i < this.p1.board.guessableSpaces.length; i++) {
 			var coord = this.p1.board.guessableSpaces[i];
@@ -1094,6 +1061,7 @@
 					//Check human's guess
 					self.p1.guess(tile);
 					self.gamelog.output('Human', self.p1.turnInfo.message);
+					self.scoreboard.update(self.p1.turnInfo.ship);
 					
 					self.turns++;
 					self.p1.turn = false;
@@ -1380,6 +1348,9 @@
 		$('.ship-placer').css('display', 'none');
 		$('.game-area').css('display', 'block');
 
+		//start playing game
+		self.gameLoop();
+
 	}
 
 
@@ -1426,8 +1397,9 @@
 		this.gameLog[0].scrollTop = this.gameLog[0].scrollHeight;
 	}
 
-	function Scoreboard() {
+	function Scoreboard(fleet) {
 		this.scoreboard = $('.scoreboard');
+		this.fleet = fleet;
 	}
 	window.Scoreboard = Scoreboard;
 
@@ -1435,12 +1407,11 @@
 		constructor: Scoreboard
 	}
 
-	Scoreboard.prototype.initialize = function(game) {
-		var fleet = game.p2.fleet.totalShips;
-		//console.log(fleet);
+	Scoreboard.prototype.initialize = function() {
+		var fleet = this.fleet.totalShips;
+		
 		var html = '';
 		for(var i = 0; i < fleet.length; i++) {
-			console.log(fleet[i]);
 			var ship = fleet[i];
 			var shipID = ship.shipType + ship.coord;
 			html += '<div class="' + shipID + '">' + ship.shipType + '<div class="hp-wrapper">';
@@ -1457,10 +1428,12 @@
 	}
 
 	Scoreboard.prototype.update = function(ship) {
-		var shipClass = ship.shipType + ship.coord;
-		//alert(shipClass + ' hit');
-		console.log($('.' + shipClass + ' .hit'));
-		$('.' + shipClass + ' .hit').first().removeClass('hit');
+	
+		if(ship != null) {
+			var shipClass = ship.shipType + ship.coord; //change to id?
+			$('.' + shipClass + ' .hit').first().removeClass('hit');
+			
+		}
 
 	}
 
@@ -1474,6 +1447,7 @@ function newGame() {
 	var game = new Game();
 	game.initialize();
 	//game.chooseShips();
+	// game.setUpInfoArea();
 	
 
 	//WILL HAVE TO MOVE THIS AND FIX
@@ -1489,7 +1463,7 @@ function newGame() {
 
 
 
-	game.gameLoop();
+	//game.gameLoop();
 }
 
 	
