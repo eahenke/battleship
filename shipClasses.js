@@ -890,7 +890,7 @@
 
 	
 	//Sets up new game
-	Game.prototype.newGame = function() {
+	Game.prototype.initialize = function() {
 		var self = this;
 
 		this.p1 = new Human();
@@ -944,16 +944,19 @@
 
 		$('.ai-board .ship').addClass('end');
 
-		
-		setTimeout(function(){
-			var endMsg = '<p>' + self.loser + ' has lost all ships! ' + self.winner + ' wins!</p>';
+		$('.stats').fadeIn('slow').click(function() {
+			//var endMsg = '<p>' + self.loser + ' has lost all ships! ' + self.winner + ' wins!</p>';
 			
 			$('.board-wrap').empty();
 			$('.board-wrap').html(endMsg);
 
 			self.gameStats();
-			
-		}, 1250);
+		});
+
+		
+		
+		
+		
 	
 
 	}
@@ -1382,17 +1385,14 @@
 	}
 
 
+newGame();
 
 
 
-
-
-
+function newGame() {
 	
-
-
 	var game = new Game();
-	game.newGame();
+	game.initialize();
 	//game.chooseShips();
 	
 
@@ -1410,6 +1410,11 @@
 
 
 	game.gameLoop();
+}
+
+	
+
+
 
 
 

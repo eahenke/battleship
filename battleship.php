@@ -210,7 +210,11 @@
 			</div>
 			
 			<div class="clear"></div>
-			<div class="new">New Game</div>
+
+			<div class="button-wrapper">
+				<button class="new-game">New Game</button>
+				<button class="stats hidden">Show Stats</button>
+			</div>
 		</div><!--end game area-->
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
