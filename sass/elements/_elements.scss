@@ -1,0 +1,11 @@
+.hidden {
+  display: none;
+}
+
+.button-wrapper {
+  margin-top: 0.5em;
+ }
+
+ button + button {
+  margin-left: 2em;
+ }
