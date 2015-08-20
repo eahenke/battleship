@@ -50,6 +50,23 @@
 		this.hitPoints--;
 		//console.log("Hit " + this.shipType + "! " + this.hitPoints + " hits remaining.");
 
+		// var hitPlur;
+
+		// //Correct plurals
+		// if(this.hitPoints == 1) {
+		// 	hitPlur = 'hit';
+		// } else {
+		// 	hitPlur = 'hits';
+		// }
+
+		// //Don't output hit points if sunk, sinking message will display instead.
+		// if(this.hitPoints > 0) {
+		// 	gameLog.output("Hit " + this.shipType + "! " + this.hitPoints + " " + hitPlur + " remaining.");			
+		// }
+
+	};
+
+	Ship.prototype.hitMessage = function() {
 		var hitPlur;
 
 		//Correct plurals
@@ -61,10 +78,11 @@
 
 		//Don't output hit points if sunk, sinking message will display instead.
 		if(this.hitPoints > 0) {
-			gameLog.output("Hit " + this.shipType + "! " + this.hitPoints + " " + hitPlur + " remaining.");			
-		}
-
-	};
+			return("Hit " + this.shipType + "! " + this.hitPoints + " " + hitPlur + " remaining.");			
+		} else {
+			return("Hit " + this.shipType + "! " + this.shipType + " has sunk!");
+		}		
+	}
 
 
 
@@ -176,7 +194,7 @@
 	//MAYBE UNNECESSARY OR BETTER ELSEWHERE?
 	Fleet.prototype.checkSink = function(ship) {
 		if(ship.hitPoints <= 0) {
-			gameLog.output(ship.shipType + ' has sunk!');
+			//gameLog.output(ship.shipType + ' has sunk!');
 			this.removeShip(ship);
 			return true;
 		}	
@@ -423,7 +441,7 @@
 			tile.addClass('miss');
 			this.removeSpace('guessable', tile.attr('data-coord'));
 
-			gameLog.output('Miss!');
+			//gameLog.output('Miss!');
 		}
 
 	//In case of hit, returns which ship object was hit
@@ -462,6 +480,13 @@
 		this.currentDrySpell = 0;
 		this.longestDrySpell = 0;
 
+		//turn info
+		this.turnInfo = {
+			'result' : null,
+			'ship' : null,
+			'message' : null,
+		}
+
 		this.board = new Board(this.playerType);
 		this.fleet = new Fleet();
 
@@ -470,6 +495,13 @@
 
 	Player.prototype = {
 		constructor: Player
+	}
+
+	//Resets turn info, call at start of each turn
+	Player.prototype.resetTurnInfo = function() {
+		for(var prop in this.turnInfo) {
+			prop = null;
+		}
 	}
 
 	//turns tile string to jQuery tile object.
@@ -543,9 +575,10 @@
 
 
 	//Human Subclass
-	function Human() {
+	function Human(gamelog) {
 		Player.call(this, 'human');
 		this.turn = true;
+		this.gamelog = gamelog;
 	}
 	window.Human = Human;
 	Human.prototype = Object.create(Player.prototype);
@@ -555,9 +588,12 @@
 	
 	//Checks hit/miss status of human guess.
 	Human.prototype.guess = function(tileObj) {
-		console.log(this);
-		console.log(this.board.availableSpaces);
+		//console.log(this);
+		//console.log(this.board.availableSpaces);
 		var self = this;
+		console.log(self);
+
+		self.resetTurnInfo();
 
 		var tile = tileObj.attr('data-coord');
 
@@ -572,18 +608,33 @@
 				tileObj.addClass('hit');
 				var ship = board.determineShip(tile, this.enemy.fleet);
 				ship.hit();
+
+				//update turnInfo
+				self.turnInfo.result = 'hit';
+				self.turnInfo.ship = ship;
+				self.turnInfo.message = ship.hitMessage();
+
+
+				//this.gamelog.output(ship.hitMessage());
 				
 				//Player stats
 				this.updateStats('hit');
 
-				scoreboard.update(ship);
+
+				//SCOREBOARD - FIX NEXT - COULD ALSO USE TURNINFO
+				//scoreboard.update(ship);
 
 				this.enemy.fleet.checkSink(ship);
 				
 			} else {
 				board.miss(tileObj);
 				
-				this.updateStats('miss');
+				//this.gamelog.output('Miss!');
+				self.turnInfo.result = 'miss';
+				self.turnInfo.message = 'Miss!';
+
+				
+				self.updateStats('miss');
 
 			}
 			
@@ -595,8 +646,10 @@
 
 
 	//AI Subclass
-	function AI() {
+	function AI(gamelog) {
 		Player.call(this, 'ai');
+
+		this.gamelog = gamelog;
 		
 		this.guessInfo = {
 			"firstTileHit" : null,
@@ -616,6 +669,10 @@
 	//AI turn.  Guesses tiles based on known ship locations, if any, and checks hit/miss status.
 	AI.prototype.guess = function() {
 		var board = this.enemy.board;
+		var self = this;
+
+		console.log(this);
+		this.resetTurnInfo();
 
 		//no target
 		if(this.guessInfo['targetShip'] == null) {
@@ -640,6 +697,15 @@
 
 			var ship = board.determineShip(tile, this.enemy.fleet);
 			ship.hit();
+
+			//update turnInfo
+			self.turnInfo.result = 'hit';
+			self.turnInfo.ship = ship;
+			self.turnInfo.message = ship.hitMessage();
+
+
+
+			//this.gamelog.output(ship.hitMessage());
 			
 			// Player stats
 			this.updateStats('hit');
@@ -648,6 +714,10 @@
 
 		} else { //miss
 			board.miss(tileObj);
+			//this.gamelog.output('Miss!');
+
+			this.turnInfo.result = 'miss';
+			this.turnInfo.message = 'Miss!';
 			
 			this.updateStats('miss');
 		}		
@@ -878,6 +948,10 @@
 		this.winner;
 		this.loser;
 
+		this.gamelog = new GameLog();
+		//console.log(this.gamelog);
+
+
 		this.shipPlacer = {
 			'currentShip' : null,
 		};
@@ -892,6 +966,7 @@
 	//Sets up new game
 	Game.prototype.initialize = function() {
 		var self = this;
+		this.gamelog.initialize();
 
 		this.p1 = new Human();
 		this.p2 = new AI();
@@ -901,6 +976,7 @@
 		this.assignEnemy(this.p1, this.p2);
 
 		this.turns = 0;
+
 
 
 		//Game choice
@@ -1016,7 +1092,8 @@
 					tile.off();
 
 					//Check human's guess
-					self.p1.guess(tile);	
+					self.p1.guess(tile);
+					self.gamelog.output('Human', self.p1.turnInfo.message);
 					
 					self.turns++;
 					self.p1.turn = false;
@@ -1033,6 +1110,7 @@
 						//AI Guess (after pause) and check game
 						setTimeout(function() {
 							self.p2.guess();
+							self.gamelog.output('AI', self.p2.turnInfo.message);
 
 							if(self.isGameOver()) {
 								setTimeout(function(){
@@ -1331,13 +1409,15 @@
 	}
 
 	//Adds new messages to the gameLog
-	GameLog.prototype.output = function(message) {
+	GameLog.prototype.output = function(actor, message) {
+		/*
 		if(game.p1.turn) {
 			var actor = "Human";
 		} else {
 			var actor = "AI";
 		}
-
+		*/
+	
 		var message = '<p>' + actor + ": " + message + '</p>';
 		this.gameLog.append(message);
 
@@ -1355,7 +1435,7 @@
 		constructor: Scoreboard
 	}
 
-	Scoreboard.prototype.initialize = function() {
+	Scoreboard.prototype.initialize = function(game) {
 		var fleet = game.p2.fleet.totalShips;
 		//console.log(fleet);
 		var html = '';
@@ -1399,11 +1479,11 @@ function newGame() {
 	//WILL HAVE TO MOVE THIS AND FIX
 	//SCOREBOARD IS NOT WORKING, CALLED BEFORE SHIPS CHOSEN.
 	//GAME LOOP MIGHT HAVE TO BE A CALLBACK IN CHOOSE SHIPS THATS COMES AFTER SHIP CHOOSING AND PLACING
-	var gameLog = new GameLog();
-	gameLog.initialize();
+	//var gameLog = new GameLog();
+	//gameLog.initialize();
 
-	var scoreboard = new Scoreboard();
-	scoreboard.initialize();
+	//var scoreboard = new Scoreboard();
+	//scoreboard.initialize(game);
 	
 	
 
