@@ -943,6 +943,8 @@
 		$('button.standard').click(function() {
 			self.standardGame();
 		});
+
+		// $('button.new-game').click(newGame);
 	}
 
 	//Initializes scoreboard and gamelog
@@ -1024,7 +1026,7 @@
 
 			var stats = [playerName, turns, hits, misses, hitPercent, streak, drySpell, hitsRemaining];
 
-			console.log('hp remaining', player.getTotalHitPoints());
+			
 
 			var playerStats = $('<div>').addClass('player-stats');
 			statsArea = statsArea.append(playerStats.append(stats.join('')));
@@ -1443,27 +1445,22 @@ newGame();
 
 
 function newGame() {
-	
+	//var game = null;
 	var game = new Game();
+
+	/*
+	$('.playable-area').empty();
+	$('.game-area').hide()
+	$('.game-types').show();
+	*/
+
 	game.initialize();
-	//game.chooseShips();
-	// game.setUpInfoArea();
+
+	//new game just refreshes the page to start all over
+	$('button.new-game').click(function() {
+		location.reload(true);
+	});
 	
-
-	//WILL HAVE TO MOVE THIS AND FIX
-	//SCOREBOARD IS NOT WORKING, CALLED BEFORE SHIPS CHOSEN.
-	//GAME LOOP MIGHT HAVE TO BE A CALLBACK IN CHOOSE SHIPS THATS COMES AFTER SHIP CHOOSING AND PLACING
-	//var gameLog = new GameLog();
-	//gameLog.initialize();
-
-	//var scoreboard = new Scoreboard();
-	//scoreboard.initialize(game);
-	
-	
-
-
-
-	//game.gameLoop();
 }
 
 	
