@@ -985,12 +985,18 @@
 	Game.prototype.endGame = function() {
 		var self = this;
 
+		//turn off all events on tiles
+		$('.tile').off();
+
 		$('.ai-board .ship').addClass('end');
+
+		self.gameOverAnimation();
 
 		$('.stats').fadeIn('slow').click(function() {
 			//var endMsg = '<p>' + self.loser + ' has lost all ships! ' + self.winner + ' wins!</p>';
 			
 			$('.board-wrap').empty();
+			$('.end-anim').remove();
 			// $('.board-wrap').html(endMsg);
 
 			self.gameStats();
@@ -1090,7 +1096,11 @@
 
 						}, 1200);
 
-						
+						/* testing end game
+						if(self.turns > 3) {
+							self.endGame();
+						}
+						*/
 						
 						//console.log(self.turns);											
 					}					
@@ -1353,6 +1363,14 @@
 		//start playing game
 		self.gameLoop();
 
+	}
+
+	Game.prototype.gameOverAnimation = function() {
+		var gameOverDiv = $('<div>').addClass('end-anim');
+		var gameOver = $('<h3>').addClass('game-over').text('Game Over!');
+		var msg = $('<p>').text(this.loser + ' has lost all ships. ' + this.winner + ' wins.');
+		gameOverDiv.append(gameOver).append(msg).appendTo('body');
+		gameOverDiv.fadeIn(1300);	
 	}
 
 

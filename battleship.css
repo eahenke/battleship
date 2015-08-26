@@ -324,18 +324,52 @@ button {
 }
 
 /* line 1, ../sass/elements/_elements.scss */
+body {
+  position: relative;
+}
+
+/* line 5, ../sass/elements/_elements.scss */
+body, html {
+  margin: 0;
+}
+
+/* line 9, ../sass/elements/_elements.scss */
 .hidden {
   display: none;
 }
 
-/* line 5, ../sass/elements/_elements.scss */
+/* line 13, ../sass/elements/_elements.scss */
 .button-wrapper {
   margin-top: 0.5em;
 }
 
-/* line 9, ../sass/elements/_elements.scss */
+/* line 17, ../sass/elements/_elements.scss */
 button + button {
   margin-left: 2em;
+}
+
+/* line 21, ../sass/elements/_elements.scss */
+.end-anim {
+  display: none;
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  height: 200px;
+}
+/* line 32, ../sass/elements/_elements.scss */
+.end-anim h3 {
+  font-size: 2em;
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+/* line 39, ../sass/elements/_elements.scss */
+.end-anim p {
+  text-align: center;
+  opacity: 1;
 }
 
 /* line 9, ../sass/battleship.scss */
