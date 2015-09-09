@@ -1,0 +1,135 @@
+//General
+
+.hidden {
+  display: none;
+}
+
+.clear {
+  clear: both;
+}
+
+
+//Ship Picker
+.ship-picker {
+  display: none;
+  width: 75%;
+  margin: auto;
+}
+
+.ship-list {
+
+  li {
+    height: 1.5em;
+    width: 90%;
+    margin: 0.5em;
+    border-bottom: 2px solid $board-color;
+    list-style: none;
+
+    p {
+      float: left;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 0;
+    }
+
+    .remove {
+      display: inline-block;
+      float: right;
+      width: 15px;
+      font-weight: bold;
+      color: red;
+    }
+  }
+}
+
+.ship-choice {
+  display: inline-block;
+  width: 125px;
+  height: 50px;
+  padding: 1em;
+
+  background-color: $board-color;
+  border-radius: 20px;  
+  text-align: center;
+  vertical-align: middle;
+
+  &.inactive {
+    background-color: gray;
+  }
+}
+
+//Ship Placer
+.ship-placer {
+  display: none;
+
+  //look into this, centering
+  .board {
+    
+    display: inline-block;
+    margin-left: $board_size * 1px;
+
+  }
+}
+
+.ships-to-place {
+  float: right;
+  display: inline-block;
+  width: 250px;
+
+  ul {
+    list-style: none;
+
+    //CONSIDER MAKING THESE BUTTONS
+    li {
+      width: 150px;
+      height: 50px;
+      margin-bottom: 1.5em;
+      background-color: $board_color;
+      text-align: center;
+      vertical-align: middle;
+
+      &.active {
+        background-color: green;
+      }
+
+      &.inactive {
+        background-color: gray;
+      }
+    }
+  }
+}
+
+//Game
+
+.end-anim {
+  display: none;
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 100%;
+  background-color: rgba(0,0,0, 0.7);
+  color: #fff;
+  height: 200px;
+  
+
+  h3 {
+    font-size: 2em;
+   
+  }
+
+  p {
+    text-align: center;
+    opacity: 1;
+  }
+ }
+
+//Stats
+.player-stats {
+  width: 45%;
+  display: inline-block;
+  background-color: $board_color;
+  margin-left: 2em;
+  border-radius: $board_border_radius;
+  border: 3px solid $board_border_color;
+  padding: 1em;
+}

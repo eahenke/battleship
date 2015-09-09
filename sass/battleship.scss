@@ -1,32 +1,9 @@
+@import "elements/elements";
+
 @import "mixins/mixins";
 
 @import "variables/variables";
 
 @import "objects/objects";
 
-@import "elements/elements";
-
-html {
-  box-sizing: border-box;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-body {
-  position: relative;
-  background-color: #D6F5FF;
-  font-family: $font_body;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 1em;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: $font_heading;
-}
-
-
+@import "sections/sections";
