@@ -22,6 +22,10 @@
 		<!-- To center title relative to boards, put in boardwrap, then change info-area margin-top -->
 
 		<div class="game-types">
+			<div class="logo-image">
+				<img src="images/battleship.png" alt="Battleship" />
+			</div>
+
 			<h2>Choose a game type</h2>
 			<div class='button-wrapper'>
 				<button class="standard">Standard</button>

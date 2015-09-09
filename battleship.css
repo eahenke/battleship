@@ -372,6 +372,11 @@ button + button {
   opacity: 1;
 }
 
+/* line 46, ../sass/elements/_elements.scss */
+.logo-image {
+  text-align: center;
+}
+
 /* line 9, ../sass/battleship.scss */
 html {
   box-sizing: border-box;
