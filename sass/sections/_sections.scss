@@ -65,15 +65,20 @@
   //look into this, centering
   .board {
     
-    display: inline-block;
-    margin-left: $board_size * 1px;
+    //display: inline-block;
+    // margin-left: $board_size * 1px;
+    margin-right: auto;
+    margin-left: auto;
 
   }
 }
 
 .ships-to-place {
-  float: right;
-  display: inline-block;
+  // float: right;
+  //display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 2em;
   width: 250px;
 
   ul {
@@ -84,6 +89,7 @@
       width: 150px;
       height: 50px;
       margin-bottom: 1.5em;
+      border-radius: 15px;
       background-color: $board_color;
       text-align: center;
       vertical-align: middle;
@@ -97,6 +103,11 @@
       }
     }
   }
+}
+
+.instructions p {
+  text-align: center;
+  font-size: 1.4em;
 }
 
 //Game
