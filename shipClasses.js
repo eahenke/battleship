@@ -1141,7 +1141,7 @@
 				//activate/inactive buttons
 				if(shipCount >= 5) {
 					$('.ship-choice').toggleClass('inactive');
-					$('.build-fleet button').toggleClass('inactive');
+					$('.build-fleet').toggleClass('inactive');
 				}		
 			}
 		});
@@ -1159,13 +1159,13 @@
 
 				if(shipCount < 5) {
 					$('.ship-choice').removeClass('inactive');
-					$('.build-fleet button').addClass('inactive');
+					$('.build-fleet').addClass('inactive');
 				}
 			}				
 		});
 
 		//If 5 ships, build the players' fleets, and trigger the ship placement 
-		$('.build-fleet button').click(function() {
+		$('.build-fleet').click(function() {
 			if(shipCount == 5) {
 				self.buildFleet(ships);
 				self.placeShips();

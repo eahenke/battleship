@@ -10,14 +10,13 @@
 
 .board {
   
-  .ship.hit {
+  .ship.hit, .placed, .potential {
     background-color: $ship_hit;
   }
 
   .miss {
     background-color: $board_miss;
   }
-
 }
 
 
@@ -36,6 +35,4 @@
 .ai-board .ship.end:not(.hit) {
   background-color: $ship_color;
   transition: background-color 1.0s ease;
-
-
 }

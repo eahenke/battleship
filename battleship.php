@@ -48,7 +48,7 @@
 			</ul>
 
 
-			<div class='ship-choices'>
+			<div class='ship-choices button-wrapper'>
 				<p class="ship-choice">Carrier</p>
 				<p class="ship-choice">Battleship</p>
 				<p class="ship-choice">Submarine</p>
@@ -56,8 +56,8 @@
 				<p class="ship-choice">Destroyer</p>
 			</div>
 
-			<div class='build-fleet'>
-				<button class='inactive'>Build Fleet</button>
+			<div class='button-wrapper'>
+				<button class='build-fleet inactive'>Build Fleet</button>
 			</div>
 		</div>
 

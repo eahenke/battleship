@@ -28,9 +28,6 @@
 
 .board {
   position: relative; 
-  // width: ($tile_size + ($tile_size * 10)) * 1px;
-  // height: ($tile_size + ($tile_size * 10)) * 1px;
-
   width: $board_size * 1px;
   height: $board_size * 1px;
 }

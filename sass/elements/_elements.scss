@@ -1,24 +1,36 @@
+@import "buttons";
+
+@import "headings";
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
 body {
   position: relative;
+  background-color: #4DB8DB;
+  font-family: $font_body;
 }
 
 body, html {
   margin: 0;
 }
 
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .hidden {
   display: none;
 }
 
-.button-wrapper {
-  margin-top: 0.5em;
- }
-
- button + button {
-  margin-left: 2em;
- }
-
- .end-anim {
+.end-anim {
   display: none;
   position: absolute;
   top: 40%;
@@ -31,9 +43,7 @@ body, html {
 
   h3 {
     font-size: 2em;
-    text-align: center;
-    margin-top: 1em;
-    margin-bottom: 1em;
+   
   }
 
   p {
@@ -43,6 +53,6 @@ body, html {
  }
 
 
- .logo-image {
-  text-align: center;
- }
+ // .logo-image {
+ //  text-align: center;
+ // }
