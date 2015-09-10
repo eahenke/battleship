@@ -1,3 +1,75 @@
+/* line 1, ../sass/elements/_buttons.scss */
+button {
+  width: 200px;
+  height: 75px;
+  font-size: 1.3em;
+  background-color: #297ACC;
+  border: 0 none;
+  border-radius: 20px;
+  text-align: center;
+}
+
+/* line 11, ../sass/elements/_buttons.scss */
+button + button {
+  margin-left: 2em;
+}
+
+/* line 15, ../sass/elements/_buttons.scss */
+.button-wrapper {
+  margin-top: 0.5em;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+/* line 22, ../sass/elements/_buttons.scss */
+.inactive {
+  background-color: gray;
+}
+
+/* line 1, ../sass/elements/_headings.scss */
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-family: "Press Start 2P";
+  color: #E6E6E6;
+  text-transform: uppercase;
+  text-shadow: 3px 3px #000;
+}
+
+/* line 5, ../sass/elements/_elements.scss */
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* line 9, ../sass/elements/_elements.scss */
+html {
+  box-sizing: border-box;
+}
+
+/* line 13, ../sass/elements/_elements.scss */
+body {
+  position: relative;
+  background-color: #4DB8DB;
+  font-family: "Open Sans";
+  overflow: auto;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+}
+
+/* line 23, ../sass/elements/_elements.scss */
+body, html {
+  margin: 0;
+}
+
+/* line 27, ../sass/elements/_elements.scss */
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* line 1, ../sass/objects/board/_size.scss */
 .single-board-wrap {
   width: 440px;
@@ -130,13 +202,11 @@
 
 /* line 1, ../sass/objects/infoarea/_infoarea.scss */
 .info-area {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin-top: 0em;
+  margin-top: 1em;
   width: 250px;
+  float: right;
 }
-/* line 9, ../sass/objects/infoarea/_infoarea.scss */
+/* line 10, ../sass/objects/infoarea/_infoarea.scss */
 .info-area h2 {
   font-size: 1em;
   margin-top: 0.5em;
@@ -178,101 +248,6 @@
   font-size: 1em;
   font-weight: bold;
   border-radius: 5px;
-}
-
-/* line 1, ../sass/elements/_buttons.scss */
-button {
-  width: 200px;
-  height: 75px;
-  font-size: 1.3em;
-  background-color: #297ACC;
-  border: 0 none;
-  border-radius: 20px;
-  text-align: center;
-}
-
-/* line 11, ../sass/elements/_buttons.scss */
-button + button {
-  margin-left: 2em;
-}
-
-/* line 15, ../sass/elements/_buttons.scss */
-.button-wrapper {
-  margin-top: 0.5em;
-  margin-right: auto;
-  margin-left: auto;
-  text-align: center;
-}
-
-/* line 22, ../sass/elements/_buttons.scss */
-.inactive {
-  background-color: gray;
-}
-
-/* line 1, ../sass/elements/_headings.scss */
-h1, h2, h3, h4, h5, h6 {
-  text-align: center;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  font-family: "Press Start 2P";
-  color: #E6E6E6;
-  text-transform: uppercase;
-  text-shadow: 3px 3px #000;
-}
-
-/* line 5, ../sass/elements/_elements.scss */
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-/* line 9, ../sass/elements/_elements.scss */
-html {
-  box-sizing: border-box;
-}
-
-/* line 13, ../sass/elements/_elements.scss */
-body {
-  position: relative;
-  background-color: #4DB8DB;
-  font-family: "Open Sans";
-}
-
-/* line 19, ../sass/elements/_elements.scss */
-body, html {
-  margin: 0;
-}
-
-/* line 23, ../sass/elements/_elements.scss */
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* line 29, ../sass/elements/_elements.scss */
-.hidden {
-  display: none;
-}
-
-/* line 33, ../sass/elements/_elements.scss */
-.end-anim {
-  display: none;
-  position: absolute;
-  top: 40%;
-  transform: translateY(-50%);
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #fff;
-  height: 200px;
-}
-/* line 44, ../sass/elements/_elements.scss */
-.end-anim h3 {
-  font-size: 2em;
-}
-/* line 49, ../sass/elements/_elements.scss */
-.end-anim p {
-  text-align: center;
-  opacity: 1;
 }
 
 /* line 3, ../sass/sections/_sections.scss */
@@ -338,39 +313,47 @@ img {
 }
 /* line 66, ../sass/sections/_sections.scss */
 .ship-placer .board {
-  display: inline-block;
-  margin-left: 440px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
-/* line 74, ../sass/sections/_sections.scss */
+/* line 76, ../sass/sections/_sections.scss */
 .ships-to-place {
-  float: right;
-  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 2em;
   width: 250px;
 }
-/* line 79, ../sass/sections/_sections.scss */
+/* line 84, ../sass/sections/_sections.scss */
 .ships-to-place ul {
   list-style: none;
 }
-/* line 83, ../sass/sections/_sections.scss */
+/* line 88, ../sass/sections/_sections.scss */
 .ships-to-place ul li {
   width: 150px;
   height: 50px;
   margin-bottom: 1.5em;
+  border-radius: 15px;
   background-color: #3399FF;
   text-align: center;
   vertical-align: middle;
 }
-/* line 91, ../sass/sections/_sections.scss */
+/* line 97, ../sass/sections/_sections.scss */
 .ships-to-place ul li.active {
   background-color: green;
 }
-/* line 95, ../sass/sections/_sections.scss */
+/* line 101, ../sass/sections/_sections.scss */
 .ships-to-place ul li.inactive {
   background-color: gray;
 }
 
-/* line 104, ../sass/sections/_sections.scss */
+/* line 108, ../sass/sections/_sections.scss */
+.instructions p {
+  text-align: center;
+  font-size: 1.4em;
+}
+
+/* line 115, ../sass/sections/_sections.scss */
 .end-anim {
   display: none;
   position: absolute;
@@ -381,17 +364,17 @@ img {
   color: #fff;
   height: 200px;
 }
-/* line 115, ../sass/sections/_sections.scss */
+/* line 126, ../sass/sections/_sections.scss */
 .end-anim h3 {
   font-size: 2em;
 }
-/* line 120, ../sass/sections/_sections.scss */
+/* line 131, ../sass/sections/_sections.scss */
 .end-anim p {
   text-align: center;
   opacity: 1;
 }
 
-/* line 127, ../sass/sections/_sections.scss */
+/* line 138, ../sass/sections/_sections.scss */
 .player-stats {
   width: 45%;
   display: inline-block;

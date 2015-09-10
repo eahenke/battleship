@@ -473,6 +473,7 @@
 		this.enemy;
 
 		//stats
+		this.turns = 0;
 		this.hits = 0;
 		this. misses = 0;
 		this.currentStreak = 0;
@@ -626,6 +627,7 @@
 			}
 			board.removeSpace('guessable', tile);
 		}
+		self.turns++;
 	}
 
 	//AI Subclass
@@ -695,6 +697,8 @@
 		
 		//Allow human to guess again
 		this.enemy.turn = true;
+
+		self.turns++;
 	}
 
 	//Gets the neighbors of a tile that are still guessable
@@ -904,7 +908,7 @@
 	//GAME CLASS
 	function Game() {
 		this.gameType;
-		this.turns = 0;
+		//this.turns = 0;
 		this.p1;
 		this.p2;
 
@@ -933,7 +937,7 @@
 		this.p2 = new AI();
 		this.players = [this.p1, this.p2];
 		this.assignEnemy(this.p1, this.p2);
-		this.turns = 0;
+		// this.turns = 0;
 
 		//Game choice
 		$('button.custom').click(function() {
@@ -995,7 +999,7 @@
 		$('.stats').fadeIn('slow').click(function() {
 			//var endMsg = '<p>' + self.loser + ' has lost all ships! ' + self.winner + ' wins!</p>';
 			
-			$('.board-wrap').empty();
+			$('.single-board-wrap').empty();
 			$('.end-anim').remove();
 			// $('.board-wrap').html(endMsg);
 
@@ -1022,7 +1026,7 @@
 		for(var i = 0; i < this.players.length; i++) {
 			var player = this.players[i];
 			var playerName = '<h3>' + player.playerType + '</h3>';
-			var turns = '<p>Turns: ' + this.turns + '</p>';
+			var turns = '<p>Turns: ' + player.turns + '</p>';
 			var hits = '<p>Hits: ' + player.hits + '</p>';
 			var misses = '<p>Misses: ' + player.misses + '</p>';
 			var hitPercent = '<p>Hit percentage: ' + player.getHitPercent() + '%</p>';
@@ -1036,7 +1040,10 @@
 
 			var playerStats = $('<div>').addClass('player-stats');
 			statsArea = statsArea.append(playerStats.append(stats.join('')));
-			$('.board-wrap').append(statsArea);
+			
+			statsArea.insertAfter($('.board-wrap h1'));
+
+			// $('.board-wrap').prepend(statsArea);
 
 		}
 	}
@@ -1047,8 +1054,7 @@
 	Game.prototype.gameLoop = function() {
 				  
 		var self = this;
-		console.log(self.turns);
-
+		
 		self.setUpInfoArea();
 
 		//Assign click event to all guessable spaces.
@@ -1071,7 +1077,7 @@
 					self.gamelog.output('Human', self.p1.turnInfo.message);
 					self.scoreboard.update(self.p1.turnInfo.ship);
 					
-					self.turns++;
+					// self.turns++;
 					self.p1.turn = false;
 
 		
@@ -1118,8 +1124,8 @@
 		var ships = [];
 
 		//Hide/display sections
-		$('.game-types').css('display', 'none');
-		$('.ship-picker').css('display', 'block');
+		$('.game-types').hide();
+		$('.ship-picker').show();
 
 
 		//Add ships to ship list if space available
@@ -1169,7 +1175,7 @@
 			if(shipCount == 5) {
 				self.buildFleet(ships);
 				self.placeShips();
-				$('.ship-picker').css('display', 'none');
+				$('.ship-picker').hide();
 			}
 		});
 
@@ -1196,7 +1202,7 @@
 		this.p2.fleet.standardFleet();
 
 		this.buildBoards(false); //not custom
-		$('.game-types').css('display', 'none');
+		$('.game-types').hide();
 	}
 
 	//Constructs each player's fleet based on selected ships
@@ -1211,8 +1217,6 @@
 		}
 		this.p1.fleet.addShips();
 		this.p2.fleet.addShips();
-
-		//$('.ship-picker').css('display', 'none');
 	}
 
 	//Event handling allowing players to place their own ships
@@ -1231,7 +1235,7 @@
 		}
 
 		// DISPLAY SECTION
-		$('.ship-placer').css('display', 'block');
+		$('.ship-placer').show();
 
 		//CLICK BUTTON TO PICK A SHIP TO PLACE
 		$('.ships-to-place ul li').click(function() {
@@ -1357,8 +1361,10 @@
 		
 		self.p2.board.addRandomShips(self.p2.fleet);
 
-		$('.ship-placer').css('display', 'none');
-		$('.game-area').css('display', 'block');
+		$('.ship-placer').hide();
+		$('.game-area, .game-area h1').show();
+		$('body > h1').hide();
+
 
 		//start playing game
 		self.gameLoop();

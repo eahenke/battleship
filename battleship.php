@@ -110,7 +110,7 @@
 
 		<div class="game-area">
 			<div class="board-wrap">
-				<!-- <h1>BATTLESHIP</h1> -->
+				<h1 class="hidden">BATTLESHIP</h1>
 				<div class="single-board-wrap">
 					<!-- <h2>Human Board</h2> -->
 					<div class="board human-board">
@@ -196,7 +196,16 @@
 					</div>
 					<h2>AI Board</h2>
 				</div><!--single board wrapper-->
+			
+				<div class="button-wrapper">
+					<button class="new-game">New Game</button>
+					<button class="stats hidden">Show Stats</button>
+				</div>
+
 			</div><!--board wrapper-->
+
+			
+			<!-- <div class="clear"></div> -->
 
 			<div class="info-area">
 				<h2>Enemy ships remaining</h2>
@@ -209,17 +218,11 @@
 				<div class="gamelog-container">
 					<h2>GAME LOG</h2>
 				</div>	
-
-
 			</div>
-			
-			<div class="clear"></div>
 
-			<div class="button-wrapper">
-				<button class="new-game">New Game</button>
-				<button class="stats hidden">Show Stats</button>
-			</div>
 		</div><!--end game area-->
+		<div class="clear"></div>
+
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="functions.js"></script>
