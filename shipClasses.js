@@ -311,11 +311,27 @@
 	
 	}
 
-	//Sets up new board
-
-	//add rows
+	//Sets up new board	
 	Board.prototype.initialize = function(player) {
-		var divs = '';
+		var tiles = '';
+		var rowLabel = '';
+		var colLabel = '';
+
+		//build rows
+		for(var i = 0; i < this.rows.length; i++) {
+			rowLabel += '<div class="tile label">' + this.rows[i] + '</div>';
+		}
+		$(this.selector + ' .row-label').append(rowLabel);
+
+		//build columns
+		for(var i = 0; i < this.cols.length; i++) {
+			colLabel += '<div class="tile label">' + this.cols[i] + '</div>';
+		}
+		$(this.selector + ' .column-label').append(colLabel);		
+
+
+
+
 		for(var i = 0; i < this.rows.length; i++) {
 			for(var j = 0; j < this.cols.length; j++) {
 				var coord = (this.rows[i] + '-' + this.cols[j]);
@@ -323,13 +339,13 @@
 				this.guessableSpaces.push(coord);
 
 				if(i == 0 && j == 0) {
-					divs += '<div class="tile clear" data-coord="' + coord + '"></div>';
+					tiles += '<div class="tile clear" data-coord="' + coord + '"></div>';
 				} else {
-					divs += '<div class="tile" data-coord="' + coord + '"></div>'; 
+					tiles += '<div class="tile" data-coord="' + coord + '"></div>'; 
 				}
 			}
 		}
-		$(this.selector + ' .playable-area').append(divs);
+		$(this.selector + ' .playable-area').append(tiles);
 	}
 
 
