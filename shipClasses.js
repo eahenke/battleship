@@ -824,7 +824,6 @@
 				var tile = this.randomGuess();
 			}				
 		}
-
 		return tile;
 	}
 
@@ -839,8 +838,6 @@
 			}
 		}
 	}
-
-
 
 	//Clear all information except known ships
 	AI.prototype.clearGuessInfo = function() {
@@ -862,18 +859,11 @@
 		var col1 = firstHit.split("-")[1];
 		var col2 = newHit.split("-")[1];
 
-		var orient;
-
 		if(row1 == row2) {
-			orient = 'horizontal';
+			return 'horizontal';
 		} else if (col1 == col2) {
-			orient = 'vertical'
-		} else { //testing - delete
-			//console.log('bad input!');
+			return = 'vertical'
 		}
-
-		return orient;
-
 	}
 
 	
@@ -924,7 +914,6 @@
 	//GAME CLASS
 	function Game() {
 		this.gameType;
-		//this.turns = 0;
 		this.p1;
 		this.p2;
 
@@ -953,7 +942,6 @@
 		this.p2 = new AI();
 		this.players = [this.p1, this.p2];
 		this.assignEnemy(this.p1, this.p2);
-		// this.turns = 0;
 
 		//Game choice
 		$('button.custom').click(function() {
@@ -963,8 +951,6 @@
 		$('button.standard').click(function() {
 			self.standardGame();
 		});
-
-		// $('button.new-game').click(newGame);
 	}
 
 	//Initializes scoreboard and gamelog
@@ -1012,13 +998,12 @@
 
 		self.gameOverAnimation();
 
-		$('.stats').fadeIn('slow').click(function() {
-			//var endMsg = '<p>' + self.loser + ' has lost all ships! ' + self.winner + ' wins!</p>';
+		//fire once on click and unbind
+		$('.stats').fadeIn('slow').one('click', function() {
+			
 			
 			$('.single-board-wrap').empty();
 			$('.end-anim').remove();
-			// $('.board-wrap').html(endMsg);
-
 			self.gameStats();
 		});
 
