@@ -271,14 +271,37 @@ img {
   clear: both;
 }
 
-/* line 13, ../sass/sections/_sections.scss */
+/* line 12, ../sass/sections/_sections.scss */
+.game-choice {
+  margin-top: 0em;
+}
+
+/* line 16, ../sass/sections/_sections.scss */
+.game-description {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+/* line 20, ../sass/sections/_sections.scss */
+.game-description dt {
+  color: white;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+/* line 26, ../sass/sections/_sections.scss */
+.game-description dd {
+  margin-bottom: 1em;
+}
+
+/* line 33, ../sass/sections/_sections.scss */
 .ship-picker {
   display: none;
   width: 75%;
   margin: auto;
 }
 
-/* line 21, ../sass/sections/_sections.scss */
+/* line 41, ../sass/sections/_sections.scss */
 .ship-list li {
   height: 1.5em;
   width: 90%;
@@ -287,14 +310,14 @@ img {
   border-bottom: 2px solid #297ACC;
   list-style: none;
 }
-/* line 29, ../sass/sections/_sections.scss */
+/* line 49, ../sass/sections/_sections.scss */
 .ship-list li p {
   float: left;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
 }
-/* line 36, ../sass/sections/_sections.scss */
+/* line 56, ../sass/sections/_sections.scss */
 .ship-list li .remove {
   display: inline-block;
   float: right;
@@ -304,7 +327,7 @@ img {
   cursor: pointer;
 }
 
-/* line 51, ../sass/sections/_sections.scss */
+/* line 71, ../sass/sections/_sections.scss */
 .ship-choice {
   display: inline-block;
   width: 125px;
@@ -322,34 +345,34 @@ img {
   vertical-align: middle;
   cursor: pointer;
 }
-/* line 70, ../sass/sections/_sections.scss */
+/* line 90, ../sass/sections/_sections.scss */
 .ship-choice.inactive {
   background-color: gray;
 }
 
-/* line 76, ../sass/sections/_sections.scss */
+/* line 96, ../sass/sections/_sections.scss */
 .ship-placer {
   display: none;
 }
-/* line 80, ../sass/sections/_sections.scss */
+/* line 100, ../sass/sections/_sections.scss */
 .ship-placer .board {
   margin-right: auto;
   margin-left: auto;
 }
 
-/* line 87, ../sass/sections/_sections.scss */
+/* line 107, ../sass/sections/_sections.scss */
 .ships-to-place {
   position: absolute;
   top: 2em;
   right: 0;
   width: 250px;
 }
-/* line 93, ../sass/sections/_sections.scss */
+/* line 113, ../sass/sections/_sections.scss */
 .ships-to-place ul {
   list-style: none;
   padding: 0;
 }
-/* line 97, ../sass/sections/_sections.scss */
+/* line 117, ../sass/sections/_sections.scss */
 .ships-to-place ul li {
   width: 150px;
   height: 50px;
@@ -367,22 +390,22 @@ img {
   vertical-align: middle;
   cursor: pointer;
 }
-/* line 107, ../sass/sections/_sections.scss */
+/* line 127, ../sass/sections/_sections.scss */
 .ships-to-place ul li.active {
   background-color: green;
 }
-/* line 111, ../sass/sections/_sections.scss */
+/* line 131, ../sass/sections/_sections.scss */
 .ships-to-place ul li.inactive {
   background-color: gray;
 }
 
-/* line 118, ../sass/sections/_sections.scss */
+/* line 138, ../sass/sections/_sections.scss */
 .instructions p {
   text-align: center;
   font-size: 1.4em;
 }
 
-/* line 125, ../sass/sections/_sections.scss */
+/* line 145, ../sass/sections/_sections.scss */
 .end-anim {
   display: none;
   position: absolute;
@@ -393,17 +416,17 @@ img {
   color: #fff;
   height: 200px;
 }
-/* line 136, ../sass/sections/_sections.scss */
+/* line 156, ../sass/sections/_sections.scss */
 .end-anim h3 {
   font-size: 2em;
 }
-/* line 141, ../sass/sections/_sections.scss */
+/* line 161, ../sass/sections/_sections.scss */
 .end-anim p {
   text-align: center;
   opacity: 1;
 }
 
-/* line 148, ../sass/sections/_sections.scss */
+/* line 168, ../sass/sections/_sections.scss */
 .player-stats {
   width: 45%;
   display: inline-block;
