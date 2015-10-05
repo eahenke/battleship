@@ -311,6 +311,14 @@
 	
 	}
 
+	Board.prototype.updateBoard = function(tile, outcome) {
+		if(outcome == 'hit') {
+			tile.addClass('hit');
+		} else {
+			tile.addClass('miss');
+		}
+	}
+
 	//Sets up new board	
 	Board.prototype.initialize = function(player) {
 		var tiles = '';
@@ -450,14 +458,6 @@
 			} else {
 				return false;
 			}
-		}
-
-	//Updates board in case of miss
-	Board.prototype.miss = function(tile) {
-			tile.addClass('miss');
-			this.removeSpace('guessable', tile.attr('data-coord'));
-
-			//gameLog.output('Miss!');
 		}
 
 	//In case of hit, returns which ship object was hit
@@ -612,13 +612,14 @@
 
 		if(!tileObj.hasClass('hit') && !tileObj.hasClass('miss')) {
 			
-			var board = this.enemy.board;
+			var enemyBoard = this.enemy.board;
 			
 
-			//REFACTOR WITH BOARDUPDATE - SEE AI CLASS BELOW
-			if(board.checkHit(tileObj)) {
-				tileObj.addClass('hit');
-				var ship = board.determineShip(tile, this.enemy.fleet);
+			//to-do refactor for same code if AI hits
+			if(enemyBoard.checkHit(tileObj)) {
+				
+				enemyBoard.updateBoard(tileObj, 'hit');
+				var ship = enemyBoard.determineShip(tile, this.enemy.fleet);
 				ship.hit();
 
 				//update turnInfo
@@ -632,16 +633,14 @@
 				this.enemy.fleet.checkSink(ship);
 				
 			} else {
-				board.miss(tileObj);
+				enemyBoard.updateBoard(tileObj, 'miss');
 				
-				//this.gamelog.output('Miss!');
 				self.turnInfo.result = 'miss';
-				self.turnInfo.message = 'Miss!';
-				
+				self.turnInfo.message = 'Miss!';				
 				self.updateStats('miss');
 
 			}
-			board.removeSpace('guessable', tile);
+			enemyBoard.removeSpace('guessable', tile);
 		}
 		self.turns++;
 	}
@@ -667,7 +666,7 @@
 
 	//AI turn.  Guesses tiles based on known ship locations, if any, and checks hit/miss status.
 	AI.prototype.guess = function() {
-		var board = this.enemy.board;
+		var enemyBoard = this.enemy.board;
 		var self = this;
 
 		this.resetTurnInfo();
@@ -684,11 +683,11 @@
 
 		var tileObj = this.objectify(tile);
 			
-		if(board.checkHit(tileObj)) { //hit
-			//board stuff
-			this.boardUpdate(tile, tileObj);
+		if(enemyBoard.checkHit(tileObj)) { //hit
+			
 
-			var ship = board.determineShip(tile, this.enemy.fleet);
+			enemyBoard.updateBoard(tileObj, 'hit');
+			var ship = enemyBoard.determineShip(tile, this.enemy.fleet);
 			ship.hit();
 
 			//update turnInfo
@@ -702,19 +701,18 @@
 			this.checkTarget(tile, ship);
 
 		} else { //miss
-			board.miss(tileObj);
-
+			enemyBoard.updateBoard(tileObj, 'miss');
 			this.turnInfo.result = 'miss';
-			this.turnInfo.message = 'Miss!';
-			
+			this.turnInfo.message = 'Miss!';			
 			this.updateStats('miss');
 		}		
 		this.guessInfo['lastTileGuessed'] = tile;
+		enemyBoard.removeSpace('guessable', tile);
 		
 		//Allow human to guess again
 		this.enemy.turn = true;
 
-		self.turns++;
+		this.turns++;
 	}
 
 	//Gets the neighbors of a tile that are still guessable
@@ -746,7 +744,6 @@
 	AI.prototype.boardUpdate = function(tile, tileObj) {
 		var board = this.enemy.board;
 		tileObj.addClass('hit');
-		board.removeSpace('guessable', tile);
 	}
 
 
@@ -862,7 +859,7 @@
 		if(row1 == row2) {
 			return 'horizontal';
 		} else if (col1 == col2) {
-			return = 'vertical'
+			return 'vertical'
 		}
 	}
 
