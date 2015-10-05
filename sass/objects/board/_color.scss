@@ -10,12 +10,20 @@
 
 .board {
   
-  .ship.hit, .placed, .potential {
+  .ship.hit, .impossible {
     background-color: $ship_hit;
   }
 
   .miss {
     background-color: $board_miss;
+  }
+
+  .potential {
+    background-color: green;
+  }
+
+  .placed {
+    background-color: $ship_color;
   }
 }
 

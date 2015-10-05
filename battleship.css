@@ -174,25 +174,33 @@ img {
 }
 
 /* line 13, ../sass/objects/board/_color.scss */
-.board .ship.hit, .board .placed, .board .potential {
+.board .ship.hit, .board .impossible {
   background-color: #CC0000;
 }
 /* line 17, ../sass/objects/board/_color.scss */
 .board .miss {
   background-color: #0033CC;
 }
-
+/* line 21, ../sass/objects/board/_color.scss */
+.board .potential {
+  background-color: green;
+}
 /* line 25, ../sass/objects/board/_color.scss */
+.board .placed {
+  background-color: gray;
+}
+
+/* line 33, ../sass/objects/board/_color.scss */
 .human-board .ship {
   background-color: gray;
 }
 
-/* line 31, ../sass/objects/board/_color.scss */
+/* line 39, ../sass/objects/board/_color.scss */
 .hit {
   background-color: red;
 }
 
-/* line 35, ../sass/objects/board/_color.scss */
+/* line 43, ../sass/objects/board/_color.scss */
 .ai-board .ship.end:not(.hit) {
   background-color: gray;
   transition: background-color 1.0s ease;

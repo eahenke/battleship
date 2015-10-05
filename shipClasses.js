@@ -246,9 +246,12 @@
 		var direction = ship.direction;		
 		var row = ship.row;
 		var col = ship.col;
-
 		var rowNum = letterToNum(row);
-		var shipTiles = [];
+
+		var result = {
+			possible: true,
+			shipTiles: [],
+		};
 
 		switch(direction) {
 			case('north'):
@@ -256,9 +259,14 @@
 					var possibleCoord = numToLetter(rowNum - i) + '-' + col;
 					
 					if( this.availableSpaces.indexOf(possibleCoord) === -1 ) {
-						return false;
+						result.possible = false;
+						
+						//don't include things before 'A' because jQuery won't be able to find them
+						if(rowNum - i > 0) {
+							result.shipTiles.push(possibleCoord);							
+						}
 					} else {
-						shipTiles.push(possibleCoord);
+						result.shipTiles.push(possibleCoord);
 					}
 				}
 			break;
@@ -269,9 +277,11 @@
 					var possibleCoord = row + '-' + (col + i);
 					
 					if( this.availableSpaces.indexOf(possibleCoord) === -1 ) {
-						return false;
+						result.possible = false;
+						result.shipTiles.push(possibleCoord);
+						// return false;
 					} else {
-						shipTiles.push(possibleCoord);
+						result.shipTiles.push(possibleCoord);
 					}	
 				}				
 			break;
@@ -282,9 +292,10 @@
 					var possibleCoord = numToLetter(rowNum + i) + '-' + col;
 				
 					if( this.availableSpaces.indexOf(possibleCoord) === -1 ) {
-						return false;
+						result.possible = false;
+						result.shipTiles.push(possibleCoord);
 					} else {
-						shipTiles.push(possibleCoord);
+						result.shipTiles.push(possibleCoord);
 					}
 				}
 			break;
@@ -294,14 +305,15 @@
 					var possibleCoord = row + '-' + (col - i);
 					
 					if( this.availableSpaces.indexOf(possibleCoord) === -1 ) {
-						return false;
+						result.possible = false;
+						result.shipTiles.push(possibleCoord);
 					} else {
-						shipTiles.push(possibleCoord);
+						result.shipTiles.push(possibleCoord);
 					}	
 				}
 			break;
 		}
-		return shipTiles;			
+		return result;			
 	
 	}
 
@@ -351,7 +363,7 @@
 			var positions = this.getPossibleShipPosition(ship);
 
 			//if false, rerun until true
-			while(! positions) {
+			while(! positions.possible) {
 				row = getRandom(this.rows);
 				col = getRandom(this.cols);
 				dir = getRandom(this.directions);
@@ -360,9 +372,9 @@
 				positions = this.getPossibleShipPosition(ship);
 			}
 
-			ship.addPosition(positions);
-			this.drawShip(positions, 'ship ' + ship.shipType);
-			this.removeSpace('available', positions);
+			ship.addPosition(positions.shipTiles);
+			this.drawShip(positions.shipTiles, 'ship ' + ship.shipType);
+			this.removeSpace('available', positions.shipTiles);
 		}
 	}
 
@@ -1143,7 +1155,11 @@
 				var possiblePosition = placerBoard.getPossibleShipPosition(ship);				
 				
 				//Paint potential spots
-				placerBoard.drawShip(possiblePosition, 'potential');
+				if(possiblePosition.possible) {
+					placerBoard.drawShip(possiblePosition.shipTiles, 'potential');					
+				} else {
+					placerBoard.drawShip(possiblePosition.shipTiles, 'impossible');					
+				}
 
 				//Place ship
 				$(this).click(function(){
@@ -1151,9 +1167,9 @@
 					if(self.canPlace()) {
 						possiblePosition = placerBoard.getPossibleShipPosition(ship);						
 					
-						if(possiblePosition) {
-							ship.addPosition(possiblePosition);
-							placerBoard.removeSpace('available', possiblePosition);
+						if(possiblePosition.possible) {
+							ship.addPosition(possiblePosition.shipTiles);
+							placerBoard.removeSpace('available', possiblePosition.shipTiles);
 							
 							//Paint placed ship
 							placerBoard.drawShip(ship.positions, 'placed');
@@ -1199,14 +1215,20 @@
 						}
 
 						//Clear potential and get new potential positions w/ new direction
-						$('.potential').removeClass('potential');						
+						$('.potential').removeClass('potential');
+						$('.impossible').removeClass('impossible');
 						possiblePosition = placerBoard.getPossibleShipPosition(ship);
-						placerBoard.drawShip(possiblePosition, 'potential');
+						if(possiblePosition.possible) {
+							placerBoard.drawShip(possiblePosition.shipTiles, 'potential');	
+						} else {
+							placerBoard.drawShip(possiblePosition.shipTiles, 'impossible');
+						}
 					}	
 				});				
 			}
 		}, function() {
 			$('.potential').removeClass('potential');
+			$('.impossible').removeClass('impossible');
 		});
 	}
 
