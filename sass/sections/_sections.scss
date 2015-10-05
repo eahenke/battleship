@@ -22,7 +22,8 @@
     height: 1.5em;
     width: 90%;
     margin: 0.5em;
-    border-bottom: 2px solid $board-color;
+    font-weight: bold;
+    border-bottom: 2px solid $board-border-color;
     list-style: none;
 
     p {
@@ -36,22 +37,35 @@
       display: inline-block;
       float: right;
       width: 15px;
-      font-weight: bold;
       color: red;
+      font-weight: bold;
+      cursor: pointer;
     }
   }
+}
+
+.ship-choices {
+  // border-spacing: 0.75em;
 }
 
 .ship-choice {
   display: inline-block;
   width: 125px;
-  height: 50px;
-  padding: 1em;
+  height: 60px;
+  line-height: 60px;
+  margin: 1em;
+  padding: 0 1em 0 1em;
 
-  background-color: $board-color;
-  border-radius: 20px;  
-  text-align: center;
-  vertical-align: middle;
+  @include faux-button;
+  // color: white;
+  // font-weight: bold;
+  // font-size: 1.1em;
+  // background-color: $board_border_color;
+  // border: 2px solid black;
+  // border-radius: 20px;  
+  // text-align: center;
+  // vertical-align: middle;
+  // cursor: pointer;
 
   &.inactive {
     background-color: gray;
@@ -62,11 +76,8 @@
 .ship-placer {
   display: none;
 
-  //look into this, centering
+  
   .board {
-    
-    //display: inline-block;
-    // margin-left: $board_size * 1px;
     margin-right: auto;
     margin-left: auto;
 
@@ -74,25 +85,24 @@
 }
 
 .ships-to-place {
-  // float: right;
-  //display: inline-block;
   position: absolute;
-  right: 0;
   top: 2em;
+  right: 0;
   width: 250px;
 
   ul {
     list-style: none;
+    padding: 0;
 
-    //CONSIDER MAKING THESE BUTTONS
     li {
       width: 150px;
       height: 50px;
-      margin-bottom: 1.5em;
-      border-radius: 15px;
-      background-color: $board_color;
-      text-align: center;
-      vertical-align: middle;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 1.5em;      
+      line-height: 50px;
+
+      @include faux-button;
 
       &.active {
         background-color: green;
