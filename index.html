@@ -19,14 +19,20 @@
 
 		<h1>BATTLESHIP</h1>
 
-		<!-- To center title relative to boards, put in boardwrap, then change info-area margin-top -->
-
 		<div class="game-types">
 			<div class="logo-image">
 				<img src="images/battleship.png" alt="Battleship" />
 			</div>
 
-			<h2>Choose a game type</h2>
+			<h2 class='game-choice'>Choose a game type</h2>
+			<dl class="game-description">
+				<dt>Standard</dt>
+				<dd>Classic Battleship with randomly placed ships</dd>
+
+				<dt>Custom</dt>
+				<dd>Choose any 5 ships and place them where you like.  The computer will have the same 5 ships, randomly placed</dd>
+			</dl>
+
 			<div class='button-wrapper'>
 				<button class="standard">Standard</button>
 				<button class="custom">Custom</button>
@@ -170,9 +176,6 @@
 
 			</div><!--board wrapper-->
 
-			
-			<!-- <div class="clear"></div> -->
-
 			<div class="info-area">
 				<h2>Enemy ships remaining</h2>
 				<div class="scoreboard">
@@ -187,8 +190,6 @@
 			</div>
 
 		</div><!--end game area-->
-		<div class="clear"></div>
-
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="js/functions.js"></script>

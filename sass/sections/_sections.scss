@@ -8,6 +8,26 @@
   clear: both;
 }
 
+//Main screen
+.game-choice {
+  margin-top: 0em;
+}
+
+.game-description {
+  @include center-block;
+  text-align: center;
+
+  dt {
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+
+  dd {
+    margin-bottom: 1em;
+  }
+}
+
 
 //Ship Picker
 .ship-picker {
