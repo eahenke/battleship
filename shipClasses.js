@@ -32,16 +32,13 @@
 
 	//Add tile coordinate or array of coordinates to ship's position property
 	Ship.prototype.addPosition = function(coords) {
-		console.log('add position', coords);
 		if(coords.constructor === String) {
-			this.positions.push(coords);
-					
+			this.positions.push(coords);					
 		} else if (coords.constructor === Array) {
-			this.positions = this.positions.concat(coords);
-			
+			this.positions = this.positions.concat(coords);			
 		} else {
-			//for testing, delete later.
-			console.log('neither');
+			//Error
+			console.log('Error: value is neither string nor array');
 		}
 	};
 
@@ -67,9 +64,6 @@
 			return("Hit " + this.shipType + "! " + this.shipType + " has sunk!");
 		}		
 	}
-
-
-
 
 
 	//SHIP SUBCLASSES
@@ -134,7 +128,6 @@
 		constructor: Fleet
 	};
 
-
 	Fleet.prototype.addShips = function() {
 		var shipCount = 0;
 		for(var ship in this.shipsInFleet) {
@@ -153,32 +146,17 @@
 	}
 
 
-
 	//Remove a ship from activeShips, but keep in totalShips
 	Fleet.prototype.removeShip = function(ship) {
 		var index = this.activeShips.indexOf(ship);
 		if(index > -1) {
 			this.activeShips.splice(index, 1);
-			console.log("Removed " + ship.shipType);
-		} else {
-			//for testting only
-			console.log('no such ship');
-		}
-	}
-
-	//mostly test function - change later to have it return active ships
-	Fleet.prototype.listActiveShips = function() {
-		console.log("Active ships in fleet: ");
-		for(var i = 0; i < this.activeShips.length; i++) {
-			console.log(this.activeShips[i].shipType);
 		}
 	}
 
 	//Checks if ship is sunk and removes if so
-	//MAYBE UNNECESSARY OR BETTER ELSEWHERE?
 	Fleet.prototype.checkSink = function(ship) {
 		if(ship.hitPoints <= 0) {
-			//gameLog.output(ship.shipType + ' has sunk!');
 			this.removeShip(ship);
 			return true;
 		}	
@@ -199,12 +177,9 @@
 
 		for(var ship in self.shipsInFleet) {
 			self.shipsInFleet[ship] = 1;
-			// console.log(ship);
-			// console.log(self.shipsInFleet);
 		}		
 		self.addShips();
 	}
-
 
 
 	//Board Class
@@ -227,7 +202,42 @@
 	};
 
 
-	// GETS POTENTIAL POSITIONS BASED ON LOCATION AND LENGTH
+	//Sets up new board	
+	Board.prototype.initialize = function(player) {
+		var tiles = '';
+		var rowLabel = '';
+		var colLabel = '';
+
+		//build row labels
+		for(var i = 0; i < this.rows.length; i++) {
+			rowLabel += '<div class="tile label">' + this.rows[i] + '</div>';
+		}
+		$(this.selector + ' .row-label').append(rowLabel);
+
+		//build column labels
+		for(var i = 0; i < this.cols.length; i++) {
+			colLabel += '<div class="tile label">' + this.cols[i] + '</div>';
+		}
+		$(this.selector + ' .column-label').append(colLabel);
+
+		//build tiles
+		for(var i = 0; i < this.rows.length; i++) {
+			for(var j = 0; j < this.cols.length; j++) {
+				var coord = (this.rows[i] + '-' + this.cols[j]);
+				this.availableSpaces.push(coord);
+				this.guessableSpaces.push(coord);
+
+				if(i == 0 && j == 0) {
+					tiles += '<div class="tile clear" data-coord="' + coord + '"></div>';
+				} else {
+					tiles += '<div class="tile" data-coord="' + coord + '"></div>'; 
+				}
+			}
+		}
+		$(this.selector + ' .playable-area').append(tiles);
+	}
+
+	//Gets potential positions based on location and length
 
 	//TO DO: make it return an object with all positions, and a true/false - to show positions in
 	//different color, instead of just return false for preview
@@ -295,51 +305,10 @@
 	
 	}
 
+	//Updates guess tile with hit/miss result
 	Board.prototype.updateBoard = function(tile, outcome) {
-		if(outcome == 'hit') {
-			tile.addClass('hit');
-		} else {
-			tile.addClass('miss');
-		}
+		tile.addClass(outcome);
 	}
-
-	//Sets up new board	
-	Board.prototype.initialize = function(player) {
-		var tiles = '';
-		var rowLabel = '';
-		var colLabel = '';
-
-		//build rows
-		for(var i = 0; i < this.rows.length; i++) {
-			rowLabel += '<div class="tile label">' + this.rows[i] + '</div>';
-		}
-		$(this.selector + ' .row-label').append(rowLabel);
-
-		//build columns
-		for(var i = 0; i < this.cols.length; i++) {
-			colLabel += '<div class="tile label">' + this.cols[i] + '</div>';
-		}
-		$(this.selector + ' .column-label').append(colLabel);		
-
-
-
-
-		for(var i = 0; i < this.rows.length; i++) {
-			for(var j = 0; j < this.cols.length; j++) {
-				var coord = (this.rows[i] + '-' + this.cols[j]);
-				this.availableSpaces.push(coord);
-				this.guessableSpaces.push(coord);
-
-				if(i == 0 && j == 0) {
-					tiles += '<div class="tile clear" data-coord="' + coord + '"></div>';
-				} else {
-					tiles += '<div class="tile" data-coord="' + coord + '"></div>'; 
-				}
-			}
-		}
-		$(this.selector + ' .playable-area').append(tiles);
-	}
-
 
 	//Removes a space or an array of spaces from the set of available spaces
 	Board.prototype.removeSpace = function(list, coord) {
@@ -353,16 +322,13 @@
 			var index = this[spacesList].indexOf(coord);
 			if(index > -1) {
 				this[spacesList].splice(index, 1);
-				//for testing
-				//console.log('Removed space: ' + coord);
 			}
+
 		} else if(coord.constructor === Array) {
 			for(var i = 0; i < coord.length; i++) {
 				var index = this[spacesList].indexOf(coord[i]);
 				if(index > -1) {
 					this[spacesList].splice(index, 1);
-					//for testing
-					//console.log(' Removed space: ' + coord[i]);		
 				}
 			}
 		}
@@ -371,13 +337,8 @@
 	
 	//Give ships in fleet random positions
 	Board.prototype.addRandomShips = function(fleet) {
-		//console.log('ai fleet', fleet);
-
 		for(var i = 0; i < fleet.totalShips.length; i++) {		
 			var ship = fleet.totalShips[i];
-
-			//console.log('adding random ship: ', ship)
-
 			var row = getRandom(this.rows);
 			var col = getRandom(this.cols);
 			var dir = getRandom(this.directions);
@@ -394,12 +355,8 @@
 				row = getRandom(this.rows);
 				col = getRandom(this.cols);
 				dir = getRandom(this.directions);
-
-				//console.log('new row ', row, 'new col ', col, 'new direction ', dir);
-
 				ship.direction = dir;
-				ship.setCoord(row + '-' + col);
-				
+				ship.setCoord(row + '-' + col);				
 				positions = this.getPossibleShipPosition(ship);
 			}
 
@@ -413,14 +370,12 @@
 	Board.prototype.drawAllShips = function(fleet) {
 		for(var i = 0; i < fleet.totalShips.length; i++) {
 			var ship = fleet.totalShips[i];
-
 			this.drawShip(ship.positions, 'ship ' + ship.shipType);
 		}
 	}
 
 	//Add ship to a board with given positions
 	Board.prototype.drawShip = function(positions, className) {
-		// console.log(positions);
 		for(var i = 0; i < positions.length; i++) {
 			var tile = positions[i];
 			$(this.selector + ' .tile[data-coord=' + tile + ']').addClass(className);
@@ -436,13 +391,12 @@
 	//Must pass a DOM object
 	//At some point change to not rely on the html, check based on ship.positions
 	Board.prototype.checkHit = function(tileObj) {			
-
-			if(tileObj.hasClass('ship')) {
-				return true;
-			} else {
-				return false;
-			}
+		if(tileObj.hasClass('ship')) {
+			return true;
+		} else {
+			return false;
 		}
+	}
 
 	//In case of hit, returns which ship object was hit
 	Board.prototype.determineShip = function(tile, fleet) {
@@ -453,7 +407,6 @@
 		} else {
 			tileID = tileID.attr('data-coord');
 		}
-
 
 		var whichShip;
 		for(var i = 0; i < fleet.activeShips.length; i++) {
@@ -526,11 +479,10 @@
 		for(var i = 0; i < activeShips.length; i++) {
 			hitPoints += activeShips[i].hitPoints;
 		}
-
 		return hitPoints;
 	}
 
-
+	//Gets a player's hit percentage
 	Player.prototype.getHitPercent = function() {
 		return Math.round(((this.hits / (this.hits + this.misses)) * 100) * 100) / 100;
 	}
@@ -583,8 +535,6 @@
 	window.Human = Human;
 	Human.prototype = Object.create(Player.prototype);
 	Human.prototype.constructor = Human;
-
-
 	
 	//Checks hit/miss status of human guess.
 	Human.prototype.guess = function(tileObj) {
@@ -596,14 +546,14 @@
 
 		if(!tileObj.hasClass('hit') && !tileObj.hasClass('miss')) {
 			
-			var enemyBoard = this.enemy.board;
+			var enemyBoard = self.enemy.board;
 			
 
 			//to-do refactor for same code if AI hits
 			if(enemyBoard.checkHit(tileObj)) {
 				
 				enemyBoard.updateBoard(tileObj, 'hit');
-				var ship = enemyBoard.determineShip(tile, this.enemy.fleet);
+				var ship = enemyBoard.determineShip(tile, self.enemy.fleet);
 				ship.hit();
 
 				//update turnInfo
@@ -612,9 +562,9 @@
 				self.turnInfo.message = ship.hitMessage();
 				
 				//Player stats
-				this.updateStats('hit');
+				self.updateStats('hit');
 
-				this.enemy.fleet.checkSink(ship);
+				self.enemy.fleet.checkSink(ship);
 				
 			} else {
 				enemyBoard.updateBoard(tileObj, 'miss');
@@ -653,25 +603,25 @@
 		var enemyBoard = this.enemy.board;
 		var self = this;
 
-		this.resetTurnInfo();
+		self.resetTurnInfo();
 
 		//no target
-		if(this.guessInfo['targetShip'] == null) {
+		if(self.guessInfo['targetShip'] == null) {
 
-			var tile = this.findATarget();
+			var tile = self.findATarget();
 
 		} else { //has target
 			
-			var tile = this.getTile();
+			var tile = self.getTile();
 		}
 
-		var tileObj = this.objectify(tile);
+		var tileObj = self.objectify(tile);
 			
 		if(enemyBoard.checkHit(tileObj)) { //hit
 			
 
 			enemyBoard.updateBoard(tileObj, 'hit');
-			var ship = enemyBoard.determineShip(tile, this.enemy.fleet);
+			var ship = enemyBoard.determineShip(tile, self.enemy.fleet);
 			ship.hit();
 
 			//update turnInfo
@@ -680,54 +630,23 @@
 			self.turnInfo.message = ship.hitMessage();
 			
 			// Player stats
-			this.updateStats('hit');
+			self.updateStats('hit');
 
-			this.checkTarget(tile, ship);
+			self.checkTarget(tile, ship);
 
 		} else { //miss
 			enemyBoard.updateBoard(tileObj, 'miss');
-			this.turnInfo.result = 'miss';
-			this.turnInfo.message = 'Miss!';			
-			this.updateStats('miss');
+			self.turnInfo.result = 'miss';
+			self.turnInfo.message = 'Miss!';			
+			self.updateStats('miss');
 		}		
-		this.guessInfo['lastTileGuessed'] = tile;
+		self.guessInfo['lastTileGuessed'] = tile;
 		enemyBoard.removeSpace('guessable', tile);
 		
 		//Allow human to guess again
-		this.enemy.turn = true;
+		self.enemy.turn = true;
 
-		this.turns++;
-	}
-
-	//Gets the neighbors of a tile that are still guessable
-		//SIGNIFICANT OVERLAP WITH EDUCATED GUESS - CONSIDER COMBINING
-	AI.prototype.getNeighbors = function(tile) {
-		var row = tile.split('-')[0];
-		var col = tile.split('-')[1];			
-		
-		var north = numToLetter(letterToNum(row) - 1) + '-' + col;			
-		var south = numToLetter(letterToNum(row) + 1) + '-' + col;			
-		var east = row + '-' + (parseInt(col) + 1);			
-		var west = row + '-' + (parseInt(col) - 1);
-		var possibleNeighbors = [north, south, east, west];
-		var neighbors = [];
-
-		for(var i = 0; i < possibleNeighbors.length; i++) {
-			var targ = possibleNeighbors[i];
-			if(this.enemy.board.guessableSpaces.indexOf(targ) > -1) {		
-				neighbors.push(targ);
-			}
-		}
-		return neighbors;
-
-
-	}
-
-	//Update game board in case of hit.
-	//MAYBE MOVE TO BOARD.PROTOTYPE
-	AI.prototype.boardUpdate = function(tile, tileObj) {
-		var board = this.enemy.board;
-		tileObj.addClass('hit');
+		self.turns++;
 	}
 
 
@@ -736,7 +655,7 @@
 	AI.prototype.checkTarget = function(tile, ship) {
 		//accidental hit
 		if(this.guessInfo['targetShip'] && ship != this.guessInfo['targetShip'] ) {
-			
+			//remember for later
 			this.guessInfo['knownShips'].push(tile);
 
 			//check its sink status anyway
@@ -762,7 +681,7 @@
 
 		//if there are two hits, find orient if one doesn't already exist
 		if(this.guessInfo['firstTileHit'] != this.guessInfo['lastTileHit']) {
-			this.guessInfo['lastShipOrientation'] = this.guessInfo['lastShipOrientation'] || this.findOrient();		
+			this.guessInfo['lastShipOrientation'] = this.guessInfo['lastShipOrientation'] || this.findOrient();	
 		}
 	}
 
@@ -774,20 +693,19 @@
 		if(! tile) {
 			tile = this.educatedGuess(this.guessInfo['firstTileHit']);
 		}
-
 		return tile;
 	}
 
 	//If there are knownShips, make first the target ship and update guessInfo and guess based on that ship.
 	//Otherwise choose a random tile.
 	AI.prototype.findATarget = function() {
-		var board = this.enemy.board;
+		var enemyBoard = this.enemy.board;
 
 		//find a new target
 		if(this.guessInfo['knownShips'].length) {
 
 			var targetTile = this.guessInfo['knownShips'][0];
-			var ship = board.determineShip(targetTile, this.enemy.fleet);
+			var ship = enemyBoard.determineShip(targetTile, this.enemy.fleet);
 
 			this.guessInfo['knownShips'].splice(0, 1); //remove from known ships so no loop
 
@@ -797,12 +715,13 @@
 
 		} else {
 			var tile = this.randomGuess();
-			console.log('first try tile:', tile);
 			
-			//prevents from guessing singletons when random guessing.
-			while( !this.getNeighbors(tile).length ) {				
+			var neighbors = this.getNeighbors(tile);
 
-				var tile = this.randomGuess();
+			//prevents from guessing singletons when random guessing.
+			while( !this.cullNeighbors(neighbors).length ) {
+				tile = this.randomGuess();
+				neighbors = this.getNeighbors(tile);
 			}				
 		}
 		return tile;
@@ -813,7 +732,6 @@
 		for(var i = 0; i < ship.positions.length; i++) {
 			var shipTile = ship.positions[i];
 			if(this.guessInfo['knownShips'].indexOf(shipTile) > -1) {				
-				
 				var index = this.guessInfo['knownShips'].indexOf(shipTile);
 				this.guessInfo['knownShips'].splice(index, 1);
 			}
@@ -836,22 +754,21 @@
 
 		var row1 = firstHit.split("-")[0];
 		var row2 = newHit.split("-")[0];
-
 		var col1 = firstHit.split("-")[1];
 		var col2 = newHit.split("-")[1];
 
+		/* If the AI has already hit, it will guess neighbor tiles,
+		  so one of the two must be true */
 		if(row1 == row2) {
 			return 'horizontal';
 		} else if (col1 == col2) {
 			return 'vertical'
 		}
 	}
-
 	
 	//Randomly selects an available tile to guess
 	AI.prototype.randomGuess = function() {
-		var tile = getRandom(this.enemy.board.guessableSpaces);
-		return tile;		
+		return getRandom(this.enemy.board.guessableSpaces);
 	}
 
 
@@ -860,37 +777,59 @@
 		var lastTile =  startFromTile || this.guessInfo['lastTileHit']; 
 
 		var orient = this.guessInfo['lastShipOrientation'];
-		var row = lastTile.split('-')[0];
-		var col = lastTile.split('-')[1];			
-		
-		var north = numToLetter(letterToNum(row) - 1) + '-' + col;			
-		var south = numToLetter(letterToNum(row) + 1) + '-' + col;			
-		var east = row + '-' + (parseInt(col) + 1);			
-		var west = row + '-' + (parseInt(col) - 1);
+		var neighbors = this.getNeighbors(lastTile)
 		var possibleTargets = [];
 		var targetList = [];
 
-
-		//Unsure of ship orientation, randomyly select a tile next to last hit tile
+		//Quick filter by direction, if known
 		if(orient == null) {
-			possibleTargets = [north, south, east, west];
+			possibleTargets = neighbors;
 		} else if (orient == 'vertical') {
-			possibleTargets = [north, south];			
+			possibleTargets = [neighbors.north, neighbors.south];			
 		} else if(orient == 'horizontal') {
-			possibleTargets = [east, west];			
+			possibleTargets = [neighbors.east, neighbors.west];
 		}
 
-		//Cull targets to possible tiles
-		for(var i = 0; i < possibleTargets.length; i++) {
-			var targ = possibleTargets[i];
-			if(this.enemy.board.guessableSpaces.indexOf(targ) > -1) {		
-				targetList.push(targ);
-			}
-		}
+		targetList = this.cullNeighbors(possibleTargets);
 		var target = getRandom(targetList);
 		return target;
 	}
 
+	/*Gets the neighbors of a tile and
+	  returns an object with associated directions and tiles */
+	AI.prototype.getNeighbors = function(tile) {
+		var row = tile.split('-')[0];
+		var col = tile.split('-')[1];
+
+		var neighbors = {
+			north: numToLetter(letterToNum(row) - 1) + '-' + col,
+			east: row + '-' + (parseInt(col) + 1),
+			south: numToLetter(letterToNum(row) + 1) + '-' + col,
+			west: row + '-' + (parseInt(col) - 1),
+		}
+		return neighbors;
+	}
+
+	/*Takes an array of neighboring tiles and returns the tiles that
+	  are still guessable on the board*/	
+	AI.prototype.cullNeighbors = function(possibleNeighbors) {
+		var neighbors = [];
+
+		//if passed a neighbor object, convert to array
+		if(possibleNeighbors.constructor == Object) {
+			var possibleNeighbors = [possibleNeighbors.north, possibleNeighbors.east,
+			 possibleNeighbors.south, possibleNeighbors.west];
+		}
+
+		//loop and check if tiles are guessable		
+		for(var i = 0; i < possibleNeighbors.length; i++) {
+			var targ = possibleNeighbors[i];
+			if(this.enemy.board.guessableSpaces.indexOf(targ) > -1) {		
+				neighbors.push(targ);
+			}
+		}		
+		return neighbors;	
+	}
 
 	//GAME CLASS
 	function Game() {
@@ -960,7 +899,6 @@
 				this.winner = 'Player 1';
 				this.loser = 'Player 2';
 			}
-
 			return true;
 
 		} else {
@@ -1131,7 +1069,6 @@
 				$('.ship-picker').hide();
 			}
 		});
-
 	}
 
 	//Shifts the ship list up
@@ -1163,10 +1100,7 @@
 		for(var i = 0; i < ships.length; i++) {
 			var shipType = ships[i];
 			this.p1.fleet.shipsInFleet[shipType]++;
-			console.log(this.p1.fleet.shipsInFleet[shipType]);
-
 			this.p2.fleet.shipsInFleet[shipType]++;
-
 		}
 		this.p1.fleet.addShips();
 		this.p2.fleet.addShips();
@@ -1183,7 +1117,6 @@
 		for(var i = 0; i < this.p1.fleet.activeShips.length; i++) {
 			var shipChoice = this.p1.fleet.activeShips[i];
 
-			//ID PART POTENTIALLY UNECESSARY?
 			$('<li>').text(shipChoice.shipType).attr('id', shipChoice.ID).appendTo($('.ships-to-place ul'));
 		}
 
@@ -1202,27 +1135,21 @@
 
 		//Show preview of ship on hover
 		$('.placer-board .playable-area .tile').hover(function(){
-
 			
 			if(self.canPlace()) {
 				
 				var coord = $(this).attr('data-coord');
-				ship.setCoord(coord);
-				
-				var possiblePosition = placerBoard.getPossibleShipPosition(ship);
-				console.log('current possible positions', possiblePosition);
-				
+				ship.setCoord(coord);				
+				var possiblePosition = placerBoard.getPossibleShipPosition(ship);				
 				
 				//Paint potential spots
 				placerBoard.drawShip(possiblePosition, 'potential');
-
 
 				//Place ship
 				$(this).click(function(){
 
 					if(self.canPlace()) {
-						possiblePosition = placerBoard.getPossibleShipPosition(ship);
-						
+						possiblePosition = placerBoard.getPossibleShipPosition(ship);						
 					
 						if(possiblePosition) {
 							ship.addPosition(possiblePosition);
@@ -1244,7 +1171,6 @@
 									
 								});
 							}
-
 							//reset ship
 							ship = null;
 						}
@@ -1254,7 +1180,6 @@
 
 
 				// Rotate ships
-				//clean up once you redo the random ship placement function
 				$(document).keydown(function(event) {
 					
 					if(ship && (event.which == 87 || event.which == 65 || 
@@ -1278,10 +1203,7 @@
 						possiblePosition = placerBoard.getPossibleShipPosition(ship);
 						placerBoard.drawShip(possiblePosition, 'potential');
 					}	
-				});
-
-
-				
+				});				
 			}
 		}, function() {
 			$('.potential').removeClass('potential');
@@ -1315,7 +1237,6 @@
 		$('.ship-placer').hide();
 		$('.game-area, .game-area h1').show();
 		$('body > h1').hide();
-
 
 		//start playing game
 		self.gameLoop();
@@ -1386,7 +1307,6 @@
 
 			html += '</div></div>';
 		}
-
 		this.scoreboard.append(html);
 	}
 
@@ -1398,7 +1318,6 @@
 			$('.' + shipClass + ' .hit').first().removeClass('hit');			
 		}
 	}
-
 
 
 //Runs a new game
