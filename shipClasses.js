@@ -35,10 +35,10 @@
 		console.log('add position', coords);
 		if(coords.constructor === String) {
 			this.positions.push(coords);
-			//console.log('string');			
+					
 		} else if (coords.constructor === Array) {
 			this.positions = this.positions.concat(coords);
-			//console.log('array');
+			
 		} else {
 			//for testing, delete later.
 			console.log('neither');
@@ -48,22 +48,6 @@
 	//Decrease hit points in case of hit
 	Ship.prototype.hit = function() {
 		this.hitPoints--;
-		//console.log("Hit " + this.shipType + "! " + this.hitPoints + " hits remaining.");
-
-		// var hitPlur;
-
-		// //Correct plurals
-		// if(this.hitPoints == 1) {
-		// 	hitPlur = 'hit';
-		// } else {
-		// 	hitPlur = 'hits';
-		// }
-
-		// //Don't output hit points if sunk, sinking message will display instead.
-		// if(this.hitPoints > 0) {
-		// 	gameLog.output("Hit " + this.shipType + "! " + this.hitPoints + " " + hitPlur + " remaining.");			
-		// }
-
 	};
 
 	Ship.prototype.hitMessage = function() {
@@ -155,7 +139,7 @@
 		var shipCount = 0;
 		for(var ship in this.shipsInFleet) {
 			var typeOfShip = window[ship];
-			console.log(typeOfShip);
+			
 			for(var i = 0; i < this.shipsInFleet[ship]; i++) {
 				
 				var newShip = new typeOfShip();
@@ -215,8 +199,8 @@
 
 		for(var ship in self.shipsInFleet) {
 			self.shipsInFleet[ship] = 1;
-			console.log(ship);
-			console.log(self.shipsInFleet);
+			// console.log(ship);
+			// console.log(self.shipsInFleet);
 		}		
 		self.addShips();
 	}
@@ -436,7 +420,7 @@
 
 	//Add ship to a board with given positions
 	Board.prototype.drawShip = function(positions, className) {
-		console.log(positions);
+		// console.log(positions);
 		for(var i = 0; i < positions.length; i++) {
 			var tile = positions[i];
 			$(this.selector + ' .tile[data-coord=' + tile + ']').addClass(className);
@@ -996,20 +980,12 @@
 		self.gameOverAnimation();
 
 		//fire once on click and unbind
-		$('.stats').fadeIn('slow').one('click', function() {
-			
-			
+		$('.stats').fadeIn('slow').one('click', function() {			
 			$('.single-board-wrap').empty();
 			$('.end-anim').remove();
 			self.gameStats();
+			$('.stats').fadeOut('slow');
 		});
-
-		
-		
-		
-		
-	
-
 	}
 
 	//Displays stats after game
@@ -1032,21 +1008,14 @@
 			var drySpell = '<p>Longest dryspell: ' + player.longestDrySpell + '</p>';
 			var hitsRemaining = '<p>Hit points remaining: ' + player.getTotalHitPoints() + '</p>';
 
-			var stats = [playerName, turns, hits, misses, hitPercent, streak, drySpell, hitsRemaining];
-
-			
+			var stats = [playerName, turns, hits, misses, hitPercent, streak, drySpell, hitsRemaining];			
 
 			var playerStats = $('<div>').addClass('player-stats');
 			statsArea = statsArea.append(playerStats.append(stats.join('')));
 			
 			statsArea.insertAfter($('.board-wrap h1'));
-
-			// $('.board-wrap').prepend(statsArea);
-
 		}
 	}
-
-
 
 	//Main game area.  Assigns click events, runs human and AI turns, checks for winners.
 	Game.prototype.gameLoop = function() {
@@ -1062,9 +1031,7 @@
 			tileObj.click(function() {
 	  			
 				//Only allow clicking on player's turn
-				if(self.p1.turn) {
-					
-					
+				if(self.p1.turn) {					
 					var tile = $(this);
 					
 					//turn off events on a clicked tile
@@ -1074,10 +1041,8 @@
 					self.p1.guess(tile);
 					self.gamelog.output('Human', self.p1.turnInfo.message);
 					self.scoreboard.update(self.p1.turnInfo.ship);
-					
-					// self.turns++;
-					self.p1.turn = false;
 
+					self.p1.turn = false;
 		
 					//After human's turn is done, check game status.
 
@@ -1099,20 +1064,10 @@
 							}
 
 						}, 1200);
-
-						/* testing end game
-						if(self.turns > 3) {
-							self.endGame();
-						}
-						*/
-						
-						//console.log(self.turns);											
 					}					
 				}
-			});
-	
-		}
-	
+			});	
+		}	
 	}
 	
 	//Game section that allows player to choose which ships to use in a custom game
@@ -1224,7 +1179,7 @@
 		var placerBoard = new Board('placer');
 		var count = 0;
 
-		//CREATE THE SHIP CHOICE BUTTONS
+		//Create ship choice buttons
 		for(var i = 0; i < this.p1.fleet.activeShips.length; i++) {
 			var shipChoice = this.p1.fleet.activeShips[i];
 
@@ -1232,10 +1187,10 @@
 			$('<li>').text(shipChoice.shipType).attr('id', shipChoice.ID).appendTo($('.ships-to-place ul'));
 		}
 
-		// DISPLAY SECTION
+		// Display section
 		$('.ship-placer').show();
 
-		//CLICK BUTTON TO PICK A SHIP TO PLACE
+		//Click button to pick a ship to place
 		$('.ships-to-place ul li').click(function() {
 			$('.ships-to-place .active').removeClass('active');
 			$(this).addClass('active');
@@ -1245,8 +1200,7 @@
 		});
 
 
-
-		//SHOW PREVIEW OF SHIP PLACEMENT ON HOVER
+		//Show preview of ship on hover
 		$('.placer-board .playable-area .tile').hover(function(){
 
 			
@@ -1259,11 +1213,11 @@
 				console.log('current possible positions', possiblePosition);
 				
 				
-				//PAINT POTENTIAL SPOTS
+				//Paint potential spots
 				placerBoard.drawShip(possiblePosition, 'potential');
 
 
-				//PLACE SHIP
+				//Place ship
 				$(this).click(function(){
 
 					if(self.canPlace()) {
@@ -1274,7 +1228,7 @@
 							ship.addPosition(possiblePosition);
 							placerBoard.removeSpace('available', possiblePosition);
 							
-							//PAINT PLACED SHIP
+							//Paint placed ship
 							placerBoard.drawShip(ship.positions, 'placed');
 
 							//inactivate button
@@ -1299,7 +1253,7 @@
 
 
 
-				// ROTATE SHIPS
+				// Rotate ships
 				//clean up once you redo the random ship placement function
 				$(document).keydown(function(event) {
 					
@@ -1317,10 +1271,9 @@
 
 						} else if(event.which == 68) {
 							ship.direction = 'east';							
-
 						}
 
-						//CLEAR POTENTIAL AND GET NEW POTENTIAL POSITIONS W/ NEW DIRECTION
+						//Clear potential and get new potential positions w/ new direction
 						$('.potential').removeClass('potential');						
 						possiblePosition = placerBoard.getPossibleShipPosition(ship);
 						placerBoard.drawShip(possiblePosition, 'potential');
@@ -1335,7 +1288,7 @@
 		});
 	}
 
-	// CHECKS IF THERES A CURRENT SHIP THAT HAS NOT BEEN PLACED
+	//Check if there's a current ship that has not been placed
 	Game.prototype.canPlace = function() {
 		var self = this;
 		var ship = self.shipPlacer.currentShip;
@@ -1347,7 +1300,7 @@
 		}
 	}
 
-
+	//Build each player's board
 	Game.prototype.buildBoards = function(custom) {
 		var self = this;
 
@@ -1369,6 +1322,7 @@
 
 	}
 
+	//Display an animated message at end of game
 	Game.prototype.gameOverAnimation = function() {
 		var gameOverDiv = $('<div>').addClass('end-anim');
 		var gameOver = $('<h3>').addClass('game-over').text('Game Over!');
@@ -1378,7 +1332,7 @@
 	}
 
 
-
+	// GameLog Object
 	function GameLog() {
 		this.gameLog = $('<div>');
 	}
@@ -1388,31 +1342,15 @@
 		constructor: GameLog
 	}
 
-	GameLog.prototype.initialize = function() {
-		
+	GameLog.prototype.initialize = function() {		
 		this.gameLog.addClass('gamelog');
-		
-		//buffer to allow for top margin on gamelog
-		//may no longer be needed
-		var clear = $('<div>').addClass('clear');
-		//$('.info-area').append(clear);
 
 		//attach gamelog
-		$('.gamelog-container').append(this.gameLog);
-
-		
+		$('.gamelog-container').append(this.gameLog);		
 	}
 
 	//Adds new messages to the gameLog
-	GameLog.prototype.output = function(actor, message) {
-		/*
-		if(game.p1.turn) {
-			var actor = "Human";
-		} else {
-			var actor = "AI";
-		}
-		*/
-	
+	GameLog.prototype.output = function(actor, message) {	
 		var message = '<p>' + actor + ": " + message + '</p>';
 		this.gameLog.append(message);
 
@@ -1421,6 +1359,7 @@
 		this.gameLog[0].scrollTop = this.gameLog[0].scrollHeight;
 	}
 
+	// Scoreboard object
 	function Scoreboard(fleet) {
 		this.scoreboard = $('.scoreboard');
 		this.fleet = fleet;
@@ -1451,44 +1390,29 @@
 		this.scoreboard.append(html);
 	}
 
+	//Update the hitpoints shown
 	Scoreboard.prototype.update = function(ship) {
 	
 		if(ship != null) {
-			var shipClass = ship.shipType + ship.coord; //change to id?
-			$('.' + shipClass + ' .hit').first().removeClass('hit');
-			
+			var shipClass = ship.shipType + ship.coord;
+			$('.' + shipClass + ' .hit').first().removeClass('hit');			
 		}
-
 	}
 
 
-newGame();
 
-
-
+//Runs a new game
 function newGame() {
-	//var game = null;
 	var game = new Game();
-
-	/*
-	$('.playable-area').empty();
-	$('.game-area').hide()
-	$('.game-types').show();
-	*/
 
 	game.initialize();
 
 	//new game just refreshes the page to start all over
 	$('button.new-game').click(function() {
 		location.reload(true);
-	});
-	
+	});	
 }
 
-	
-
-
-
-
+newGame();
 
 })(window);

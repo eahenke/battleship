@@ -3,18 +3,21 @@ button {
   width: 200px;
   height: 75px;
   font-size: 1.3em;
+  font-weight: bold;
+  color: white;
   background-color: #297ACC;
-  border: 0 none;
+  border: 2px solid black;
   border-radius: 20px;
   text-align: center;
+  cursor: pointer;
 }
 
-/* line 11, ../sass/elements/_buttons.scss */
+/* line 14, ../sass/elements/_buttons.scss */
 button + button {
   margin-left: 2em;
 }
 
-/* line 15, ../sass/elements/_buttons.scss */
+/* line 18, ../sass/elements/_buttons.scss */
 .button-wrapper {
   margin-top: 0.5em;
   margin-right: auto;
@@ -22,7 +25,7 @@ button + button {
   text-align: center;
 }
 
-/* line 22, ../sass/elements/_buttons.scss */
+/* line 25, ../sass/elements/_buttons.scss */
 .inactive {
   background-color: gray;
 }
@@ -272,88 +275,106 @@ img {
   height: 1.5em;
   width: 90%;
   margin: 0.5em;
-  border-bottom: 2px solid #3399FF;
+  font-weight: bold;
+  border-bottom: 2px solid #297ACC;
   list-style: none;
 }
-/* line 28, ../sass/sections/_sections.scss */
+/* line 29, ../sass/sections/_sections.scss */
 .ship-list li p {
   float: left;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
 }
-/* line 35, ../sass/sections/_sections.scss */
+/* line 36, ../sass/sections/_sections.scss */
 .ship-list li .remove {
   display: inline-block;
   float: right;
   width: 15px;
-  font-weight: bold;
   color: red;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-/* line 45, ../sass/sections/_sections.scss */
+/* line 51, ../sass/sections/_sections.scss */
 .ship-choice {
   display: inline-block;
   width: 125px;
-  height: 50px;
-  padding: 1em;
-  background-color: #3399FF;
-  border-radius: 20px;
+  height: 60px;
+  line-height: 60px;
+  margin: 1em;
+  padding: 0 1em 0 1em;
+  color: white;
+  font-size: 1.1em;
+  font-weight: bold;
+  border: 2px solid black;
+  border-radius: 15px;
+  background-color: #297ACC;
   text-align: center;
   vertical-align: middle;
+  cursor: pointer;
 }
-/* line 56, ../sass/sections/_sections.scss */
+/* line 70, ../sass/sections/_sections.scss */
 .ship-choice.inactive {
   background-color: gray;
 }
 
-/* line 62, ../sass/sections/_sections.scss */
+/* line 76, ../sass/sections/_sections.scss */
 .ship-placer {
   display: none;
 }
-/* line 66, ../sass/sections/_sections.scss */
+/* line 80, ../sass/sections/_sections.scss */
 .ship-placer .board {
   margin-right: auto;
   margin-left: auto;
 }
 
-/* line 76, ../sass/sections/_sections.scss */
+/* line 87, ../sass/sections/_sections.scss */
 .ships-to-place {
   position: absolute;
-  right: 0;
   top: 2em;
+  right: 0;
   width: 250px;
 }
-/* line 84, ../sass/sections/_sections.scss */
+/* line 93, ../sass/sections/_sections.scss */
 .ships-to-place ul {
   list-style: none;
+  padding: 0;
 }
-/* line 88, ../sass/sections/_sections.scss */
+/* line 97, ../sass/sections/_sections.scss */
 .ships-to-place ul li {
   width: 150px;
   height: 50px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 1.5em;
+  line-height: 50px;
+  color: white;
+  font-size: 1.1em;
+  font-weight: bold;
+  border: 2px solid black;
   border-radius: 15px;
-  background-color: #3399FF;
+  background-color: #297ACC;
   text-align: center;
   vertical-align: middle;
+  cursor: pointer;
 }
-/* line 97, ../sass/sections/_sections.scss */
+/* line 107, ../sass/sections/_sections.scss */
 .ships-to-place ul li.active {
   background-color: green;
 }
-/* line 101, ../sass/sections/_sections.scss */
+/* line 111, ../sass/sections/_sections.scss */
 .ships-to-place ul li.inactive {
   background-color: gray;
 }
 
-/* line 108, ../sass/sections/_sections.scss */
+/* line 118, ../sass/sections/_sections.scss */
 .instructions p {
   text-align: center;
   font-size: 1.4em;
 }
 
-/* line 115, ../sass/sections/_sections.scss */
+/* line 125, ../sass/sections/_sections.scss */
 .end-anim {
   display: none;
   position: absolute;
@@ -364,17 +385,17 @@ img {
   color: #fff;
   height: 200px;
 }
-/* line 126, ../sass/sections/_sections.scss */
+/* line 136, ../sass/sections/_sections.scss */
 .end-anim h3 {
   font-size: 2em;
 }
-/* line 131, ../sass/sections/_sections.scss */
+/* line 141, ../sass/sections/_sections.scss */
 .end-anim p {
   text-align: center;
   opacity: 1;
 }
 
-/* line 138, ../sass/sections/_sections.scss */
+/* line 148, ../sass/sections/_sections.scss */
 .player-stats {
   width: 45%;
   display: inline-block;
