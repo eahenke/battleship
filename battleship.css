@@ -167,6 +167,14 @@ img {
   clear: both;
 }
 
+@media screen and (min-width: 1400px) {
+  /* line 101, ../sass/objects/board/_size.scss */
+  .board-wrap {
+    margin-right: auto;
+    margin-left: auto;
+    float: none;
+  }
+}
 /* line 3, ../sass/objects/board/_color.scss */
 .playable-area .tile {
   background-color: #3399FF;
@@ -213,33 +221,38 @@ img {
 
 /* line 1, ../sass/objects/infoarea/_infoarea.scss */
 .info-area {
-  margin-top: 1em;
+  position: absolute;
+  top: 5%;
+  right: 0;
   width: 250px;
-  float: right;
 }
-/* line 10, ../sass/objects/infoarea/_infoarea.scss */
+/* line 7, ../sass/objects/infoarea/_infoarea.scss */
 .info-area h2 {
   font-size: 1em;
   margin-top: 0.5em;
+  text-align: right;
+  margin-right: 1em;
 }
 
 /* line 1, ../sass/objects/infoarea/_scoreboard.scss */
 .scoreboard {
   height: 300px;
-  padding-left: 1em;
+  padding-right: 1em;
   border-radius: 5px;
   font-size: 1.2em;
   font-weight: bold;
+  text-align: right;
 }
 
-/* line 9, ../sass/objects/infoarea/_scoreboard.scss */
+/* line 10, ../sass/objects/infoarea/_scoreboard.scss */
 .hitpoint {
+  display: inline-block;
   width: 20px;
   height: 15px;
   margin-right: 5px;
   border: 1px solid black;
   border-radius: 60%;
-  display: inline-block;
+  text-align: right;
 }
 
 /* line 1, ../sass/objects/infoarea/_gamelog.scss */
@@ -250,14 +263,15 @@ img {
 
 /* line 7, ../sass/objects/infoarea/_gamelog.scss */
 .gamelog {
+  float: right;
   width: 250px;
   height: 220px;
-  padding: .5em;
   margin-top: 0em;
+  padding: 1em 1em .5em .5em;
   overflow-y: auto;
-  float: right;
   font-size: 1em;
   font-weight: bold;
+  text-align: right;
   border-radius: 5px;
 }
 
@@ -345,34 +359,34 @@ img {
   vertical-align: middle;
   cursor: pointer;
 }
-/* line 90, ../sass/sections/_sections.scss */
+/* line 81, ../sass/sections/_sections.scss */
 .ship-choice.inactive {
   background-color: gray;
 }
 
-/* line 96, ../sass/sections/_sections.scss */
+/* line 87, ../sass/sections/_sections.scss */
 .ship-placer {
   display: none;
 }
-/* line 100, ../sass/sections/_sections.scss */
+/* line 91, ../sass/sections/_sections.scss */
 .ship-placer .board {
   margin-right: auto;
   margin-left: auto;
 }
 
-/* line 107, ../sass/sections/_sections.scss */
+/* line 98, ../sass/sections/_sections.scss */
 .ships-to-place {
   position: absolute;
   top: 2em;
   right: 0;
   width: 250px;
 }
-/* line 113, ../sass/sections/_sections.scss */
+/* line 104, ../sass/sections/_sections.scss */
 .ships-to-place ul {
   list-style: none;
   padding: 0;
 }
-/* line 117, ../sass/sections/_sections.scss */
+/* line 108, ../sass/sections/_sections.scss */
 .ships-to-place ul li {
   width: 150px;
   height: 50px;
@@ -390,43 +404,50 @@ img {
   vertical-align: middle;
   cursor: pointer;
 }
-/* line 127, ../sass/sections/_sections.scss */
+/* line 118, ../sass/sections/_sections.scss */
 .ships-to-place ul li.active {
   background-color: green;
 }
-/* line 131, ../sass/sections/_sections.scss */
+/* line 122, ../sass/sections/_sections.scss */
 .ships-to-place ul li.inactive {
   background-color: gray;
 }
 
-/* line 138, ../sass/sections/_sections.scss */
+/* line 129, ../sass/sections/_sections.scss */
 .instructions p {
   text-align: center;
   font-size: 1.4em;
 }
 
-/* line 145, ../sass/sections/_sections.scss */
+/* line 136, ../sass/sections/_sections.scss */
+.game-area {
+  overflow: hidden;
+  width: auto;
+}
+
+/* line 141, ../sass/sections/_sections.scss */
 .end-anim {
   display: none;
   position: absolute;
   top: 40%;
-  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
   width: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   color: #fff;
   height: 200px;
 }
-/* line 156, ../sass/sections/_sections.scss */
+/* line 153, ../sass/sections/_sections.scss */
 .end-anim h3 {
   font-size: 2em;
 }
-/* line 161, ../sass/sections/_sections.scss */
+/* line 158, ../sass/sections/_sections.scss */
 .end-anim p {
   text-align: center;
   opacity: 1;
 }
 
-/* line 168, ../sass/sections/_sections.scss */
+/* line 165, ../sass/sections/_sections.scss */
 .player-stats {
   width: 45%;
   display: inline-block;

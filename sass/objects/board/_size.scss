@@ -95,3 +95,12 @@
 .clear {
   clear: both;
 } 
+
+// Center on larger displays
+@media screen and (min-width: 1400px) {
+  .board-wrap {
+    margin-right: auto;
+    margin-left: auto;
+    float: none;
+  }
+}
