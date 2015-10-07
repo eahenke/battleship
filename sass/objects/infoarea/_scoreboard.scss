@@ -1,16 +1,18 @@
 .scoreboard {
   height: 300px;
-  padding-left: 1em; 
+  padding-right: 1em; 
   border-radius: 5px;
   font-size: 1.2em;
   font-weight: bold;
+  text-align: right;
 }
 
 .hitpoint {
+  display: inline-block;
   width: 20px;
   height: 15px;
   margin-right: 5px;
   border: 1px solid black;
   border-radius: 60%;
-  display: inline-block;
+  text-align: right;
 }
