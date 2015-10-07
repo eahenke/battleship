@@ -1,3 +1,7 @@
-ai guessing algorithm
-battleship.js
-ai-guess.js
+### Sass ###
+.sass-cache
+*.css.map
+css/
+
+### Notes ###
+todo.txt
